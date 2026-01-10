@@ -11,6 +11,9 @@ importers:
       '@solid-primitives/autofocus':
         specifier: ^0.1.3
         version: 0.1.3(solid-js@1.9.10)
+      '@solid-primitives/i18n':
+        specifier: ^2.2.1
+        version: 2.2.1(solid-js@1.9.10)
       '@tauri-apps/api':
         specifier: ^2
         version: 2.9.1
@@ -422,6 +425,11 @@ packages:
 
   '@solid-primitives/autofocus@0.1.3':
     resolution: {integrity: sha512-6uZ6NcAvBDaMv6SPJyKJsjYWGxVzinXfKA+Dd5eL6ko3bU+zk/57y4Pgz0g/dl6gGeYbMh0y7a3mSVCurPzTRg==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/i18n@2.2.1':
+    resolution: {integrity: sha512-TnTnE2Ku11MGYZ1JzhJ8pYscwg1fr9MteoYxPwsfxWfh9Jp5K7RRJncJn9BhOHvNLwROjqOHZ46PT7sPHqbcXw==}
     peerDependencies:
       solid-js: ^1.6.12
 
@@ -1052,6 +1060,10 @@ snapshots:
   '@solid-primitives/autofocus@0.1.3(solid-js@1.9.10)':
     dependencies:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.10)
+      solid-js: 1.9.10
+
+  '@solid-primitives/i18n@2.2.1(solid-js@1.9.10)':
+    dependencies:
       solid-js: 1.9.10
 
   '@solid-primitives/utils@6.3.2(solid-js@1.9.10)':

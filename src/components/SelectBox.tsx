@@ -9,6 +9,7 @@ import {
 import styles from "./SelectBox.module.css";
 import replaceSpecialCharacters from "replace-special-characters";
 import { autofocus } from "@solid-primitives/autofocus";
+import { useTranslation } from "../lang/translate";
 // prevents from being tree-shaken by TS
 autofocus;
 
@@ -25,6 +26,8 @@ export default function SelectBox(props: {
   possibleValues: SelectBoxPossibleValue[];
   autofocus?: boolean;
 }) {
+  const { t } = useTranslation();
+
   const id = createUniqueId();
 
   const [search, setSearch] = createSignal("");
@@ -149,7 +152,7 @@ export default function SelectBox(props: {
               [styles.canAutoComplete]: hasFocus(),
             }}
             type="search"
-            placeholder="Search..."
+            placeholder={t("general.searchPlaceholder")}
             value={search()}
             autocapitalize="off"
             autocorrect="off"

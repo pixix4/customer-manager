@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, Show } from "solid-js";
 import TextInput from "../components/TextInput";
 import styles from "./EmployeeDetails.module.css";
 import Button from "../components/Button";
@@ -8,6 +8,7 @@ import {
   EditEmployeeDto,
   storeEmployee,
 } from "../model";
+import { useTranslation } from "../lang/translate";
 
 const emptyEditData: EditEmployeeDto = {
   id: null,
@@ -19,6 +20,8 @@ export default function EmployeeDetails(props: {
   setSelectedId: (id: number | undefined) => void;
   onUpdate: () => void;
 }) {
+  const { t } = useTranslation();
+
   const [employee] = createEmployeeByIdResource(() => props.selectedId);
 
   const [editData, setEditData] = createSignal<EditEmployeeDto>(emptyEditData);
@@ -64,26 +67,28 @@ export default function EmployeeDetails(props: {
   return (
     <div class={styles.tagDetails}>
       <TextInput
-        label="Name"
+        label={t("employee.name")}
         value={editData().name}
         onChange={(v) => handleChange("name", v)}
       />
 
       <div class={styles.actionRow}>
         <Button color="danger" onClick={deleteData}>
-          Löschen
+          {t("general.delete")}
         </Button>
         <div class={styles.actionRowSpacer}></div>
         <Button onClick={() => props.setSelectedId(undefined)}>
-          Abbrechen
+          {t("general.cancel")}
         </Button>
         <Button color="primary" onClick={storeData}>
-          Speichern
+          {t("general.save")}
         </Button>
       </div>
-      <div style="opacity: 0.5; margin-top: 0.6em">
-        Mitarbeiter ID: {props.selectedId ?? "null"}
-      </div>
+      <Show when={props.selectedId !== null}>
+        <div style="opacity: 0.5; margin-top: 0.6em">
+          {t("employee.idHint", { id: props.selectedId ?? -1 })}
+        </div>
+      </Show>
     </div>
   );
 }

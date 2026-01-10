@@ -4,11 +4,14 @@ import SplitView from "../components/SplitView";
 import EmployeeList from "./EmployeeList";
 import EmployeeDetails from "./EmployeeDetails";
 import { createEmployeeListResource } from "../model";
+import { useTranslation } from "../lang/translate";
 
 export default function EmployeeEditDialog(props: {
   show: boolean;
   setShow: (show: boolean) => void;
 }) {
+  const { t } = useTranslation();
+
   const [selectedId, setSelectedId] = createSignal<number | null | undefined>(
     undefined
   );
@@ -19,8 +22,8 @@ export default function EmployeeEditDialog(props: {
     <Dialog
       show={props.show}
       setShow={props.setShow}
-      title="Mitarbeiterverwaltung"
-      actionLabel="Mitarbeiter erstellen"
+      title={t("employee.title")}
+      actionLabel={t("employee.create")}
       onAction={() => setSelectedId(null)}
     >
       <SplitView

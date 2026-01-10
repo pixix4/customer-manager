@@ -1,11 +1,19 @@
 import { createSignal } from "solid-js";
 import styles from "./App.module.css";
 import EmployeeEditDialog from "./employee/EmployeeEditDialog";
-import { RiUserFacesAccountCircleLine } from "solid-icons/ri";
+import {
+  RiSystemSettings4Fill,
+  RiUserFacesAccountCircleFill,
+} from "solid-icons/ri";
+import { useTranslation } from "./lang/translate";
+import SettingsDialog from "./settings/SettingsDialog";
 
 export default function App() {
+  const { t } = useTranslation();
+
   const [showEmployeeEditDialog, setShowEmployeeEditDialog] =
     createSignal(false);
+  const [showSettingsDialog, setShowSettingsDialog] = createSignal(false);
 
   return (
     <>
@@ -15,8 +23,16 @@ export default function App() {
             <button
               class={styles.titleBarButton}
               onClick={() => setShowEmployeeEditDialog((x) => !x)}
+              title={t("employee.title")}
             >
-              <RiUserFacesAccountCircleLine />
+              <RiUserFacesAccountCircleFill />
+            </button>
+            <button
+              class={styles.titleBarButton}
+              onClick={() => setShowSettingsDialog((x) => !x)}
+              title={t("settings.title")}
+            >
+              <RiSystemSettings4Fill />
             </button>
           </div>
         </header>
@@ -26,6 +42,10 @@ export default function App() {
       <EmployeeEditDialog
         show={showEmployeeEditDialog()}
         setShow={setShowEmployeeEditDialog}
+      />
+      <SettingsDialog
+        show={showSettingsDialog()}
+        setShow={setShowSettingsDialog}
       />
     </>
   );
