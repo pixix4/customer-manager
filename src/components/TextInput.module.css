@@ -1,0 +1,78 @@
+.text-input {
+  position: relative;
+  margin: 1em 0;
+}
+
+.text-input-label {
+  position: absolute;
+  top: -0.4em;
+  left: 1em;
+  font-size: 0.8em;
+  line-height: 0.8em;
+  padding: 2px 0.4em;
+
+  background-color: var(--background-secondary);
+}
+
+.text-input-input {
+  appearance: none;
+  border: solid 2px var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--background-secondary);
+
+  width: 100%;
+  height: 100%;
+  padding: 0.8em;
+  margin: 0;
+
+  resize: vertical;
+}
+
+.text-input-input:focus {
+  outline: none;
+  border-color: var(--theme-primary);
+
+  background-color: var(--background-primary);
+}
+
+.text-input-input.can-auto-complete:focus {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.text-input-input:focus ~ .text-input-label {
+  color: var(--theme-primary);
+}
+
+.text-input-auto-complete {
+  position: absolute;
+  z-index: 1;
+  top: calc(100% - 2px);
+  left: 0;
+  right: 0;
+  max-height: 20em;
+  overflow: auto;
+  background-color: var(--background-primary);
+
+  border: solid 2px var(--theme-primary);
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+
+  padding: 0.4em;
+}
+
+.text-input-auto-complete-entry {
+  padding: 0.2em 0.6em;
+
+  user-select: none;
+  -webkit-user-select: none;
+
+  scroll-margin-block-start: 1em;
+  scroll-margin-block-end: 1em;
+}
+
+.text-input-auto-complete-entry.active {
+  padding: 0.2em 0.6em;
+  background-color: var(--background-secondary);
+  cursor: default;
+}

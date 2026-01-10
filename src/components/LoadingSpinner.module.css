@@ -1,0 +1,28 @@
+.loading-spinner {
+  --size: 1em;
+
+  position: relative;
+  width: min(100%, var(--size));
+  height: min(100%, var(--size));
+}
+
+.spinner {
+  width: 100%;
+  height: 100%;
+}
+
+.spinner-background {
+  fill: var(--border-color);
+}
+
+.spinner-foreground {
+  fill: var(--theme-primary);
+  transform-origin: center;
+  animation: spinner 0.75s infinite linear;
+}
+
+@keyframes spinner {
+  100% {
+    rotate: 360deg;
+  }
+}

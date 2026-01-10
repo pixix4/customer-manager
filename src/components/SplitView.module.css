@@ -1,0 +1,44 @@
+.split-view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: var(--split) auto;
+  grid-template-rows: auto;
+  grid-template-areas: "left right";
+}
+
+.left {
+  grid-area: left;
+  position: relative;
+
+  border-right: solid 1px var(--border-color);
+}
+
+.right {
+  grid-area: right;
+  position: relative;
+}
+
+.handle-bar {
+  position: absolute;
+  cursor: ew-resize;
+  user-select: none;
+  -webkit-user-select: none;
+  background-color: gray;
+  opacity: 0;
+  z-index: 100;
+
+  transition: opacity 200ms;
+
+  left: var(--split);
+  top: 0;
+  bottom: 0;
+  width: 0.4em;
+  margin-left: -0.2em;
+}
+
+.handle-bar:hover {
+  opacity: 0.4;
+}
