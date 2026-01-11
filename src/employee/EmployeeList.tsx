@@ -5,6 +5,32 @@ import { EmployeeDto } from "../model";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { RiSystemErrorWarningLine } from "solid-icons/ri";
 import { useTranslation } from "../lang/translate";
+import replaceSpecialCharacters from "replace-special-characters";
+
+function searchEmployee(customer: EmployeeDto, search: string): boolean {
+  const values = [customer.name].map((v) =>
+    replaceSpecialCharacters(v).toLowerCase()
+  );
+  const searchValues = search.split(" ");
+
+  console.log(values, searchValues);
+
+  for (let searchValue of searchValues) {
+    let found = false;
+    for (let value of values) {
+      if (value.includes(searchValue)) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 export default function EmployeeList(props: {
   employees: Resource<EmployeeDto[]>;
@@ -13,6 +39,16 @@ export default function EmployeeList(props: {
 }) {
   const { t } = useTranslation();
   const [search, setSearch] = createSignal("");
+
+  const filteredEmployees = () => {
+    const unfiltered = props.employees() ?? [];
+    const s = replaceSpecialCharacters(search()).toLowerCase();
+    if (s === "") {
+      return unfiltered;
+    }
+
+    return unfiltered.filter((customer) => searchEmployee(customer, s));
+  };
 
   return (
     <div class={styles.employeeList}>
@@ -40,7 +76,7 @@ export default function EmployeeList(props: {
         </Match>
         <Match when={props.employees()}>
           <div class={styles.employeeListContent}>
-            <For each={props.employees()}>
+            <For each={filteredEmployees()}>
               {(employee) => {
                 return (
                   <div

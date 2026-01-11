@@ -33,6 +33,7 @@
   --theme-primary: oklch(0.6 0.18 264);
   --theme-secondary: oklch(0.7 0.18 264);
   --theme-text: oklch(0.96 0.01 264);
+  --theme-placeholder: oklch(0.85 0.05 264);
 
   --background-primary: oklch(0.99 0.01 264);
   --background-secondary: oklch(0.95 0.01 264);
