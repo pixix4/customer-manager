@@ -11,8 +11,13 @@
 .action-row {
   display: flex;
   gap: 0.4em;
+  align-items: center;
 }
 
 .action-row-spacer {
   flex-grow: 1;
+}
+
+.id-hint {
+  opacity: 0.5;
 }

@@ -27,7 +27,7 @@ export const dict: RawDictionary = {
     birthdate: "Geburtstag",
     customerSince: "Kunde seit",
     note: "Notiz",
-    responsible_employee: "Zuständiger Mitarbeiter",
+    responsibleEmployee: "Zuständiger Mitarbeiter",
   },
   settings: {
     title: "Einstellungen",

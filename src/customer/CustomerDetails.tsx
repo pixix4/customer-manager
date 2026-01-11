@@ -1,4 +1,4 @@
-import { createEffect, createSignal, Show } from "solid-js";
+import { createEffect, createResource, createSignal, Show } from "solid-js";
 import TextInput from "../components/TextInput";
 import styles from "./CustomerDetails.module.css";
 import Button from "../components/Button";
@@ -6,9 +6,14 @@ import {
   createCustomerByIdResource,
   deleteCustomer,
   EditCustomerDto,
+  getEmployeeList,
   storeCustomer,
 } from "../model";
 import { useTranslation } from "../lang/translate";
+import InputGroup from "../components/InputGroup";
+import DateInput from "../components/DateInput";
+import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
+import SplitView from "../components/SplitView";
 
 const emptyEditData: EditCustomerDto = {
   id: null,
@@ -25,6 +30,23 @@ const emptyEditData: EditCustomerDto = {
   responsible_employee_id: null,
 };
 
+async function getEmployeeEntries(): Promise<SelectBoxPossibleValue[]> {
+  const employees = await getEmployeeList();
+  const entries: SelectBoxPossibleValue[] = employees.map((employee) => {
+    return {
+      id: employee.id,
+      name: employee.name,
+    };
+  });
+
+  entries.push({
+    id: null,
+    name: "---",
+  });
+
+  return entries;
+}
+
 export default function CustomerDetails(props: {
   selectedId: number | null;
   setSelectedId: (id: number | undefined) => void;
@@ -33,6 +55,7 @@ export default function CustomerDetails(props: {
   const { t } = useTranslation();
 
   const [customer] = createCustomerByIdResource(() => props.selectedId);
+  const [employeeEntries] = createResource(getEmployeeEntries);
 
   const [editData, setEditData] = createSignal<EditCustomerDto>({
     ...emptyEditData,
@@ -92,47 +115,102 @@ export default function CustomerDetails(props: {
   };
 
   return (
-    <div class={styles.tagDetails}>
-      <TextInput
-        label={t("customer.title")}
-        value={editData().title}
-        onChange={(v) => handleChange("title", v)}
-      />
-      <TextInput
-        label={t("customer.firstName")}
-        value={editData().first_name}
-        onChange={(v) => handleChange("first_name", v)}
-      />
-      <TextInput
-        label={t("customer.lastName")}
-        value={editData().last_name}
-        onChange={(v) => handleChange("last_name", v)}
-      />
-      <TextInput
-        label={t("customer.addressStreet")}
-        value={editData().address_street}
-        onChange={(v) => handleChange("address_street", v)}
-      />
-      <TextInput
-        label={t("customer.addressCity")}
-        value={editData().address_city}
-        onChange={(v) => handleChange("address_city", v)}
-      />
-      <TextInput
-        label={t("customer.phone")}
-        value={editData().phone}
-        onChange={(v) => handleChange("phone", v)}
-      />
-      <TextInput
-        label={t("customer.mobilePhone")}
-        value={editData().mobile_phone}
-        onChange={(v) => handleChange("mobile_phone", v)}
+    <div class={styles.customerDetails}>
+      <SplitView
+        initialSplit={50}
+        left={
+          <div class={styles.customerFields}>
+            <InputGroup>
+              <TextInput
+                label={t("customer.title")}
+                value={editData().title}
+                onChange={(v) => handleChange("title", v)}
+              />
+            </InputGroup>
+            <InputGroup>
+              <TextInput
+                label={t("customer.firstName")}
+                value={editData().first_name}
+                onChange={(v) => handleChange("first_name", v)}
+              />
+              <TextInput
+                label={t("customer.lastName")}
+                value={editData().last_name}
+                onChange={(v) => handleChange("last_name", v)}
+              />
+            </InputGroup>
+            <InputGroup>
+              <TextInput
+                label={t("customer.addressCity")}
+                value={editData().address_city}
+                onChange={(v) => handleChange("address_city", v)}
+              />
+              <TextInput
+                label={t("customer.addressStreet")}
+                value={editData().address_street}
+                onChange={(v) => handleChange("address_street", v)}
+              />
+            </InputGroup>
+            <InputGroup>
+              <TextInput
+                label={t("customer.phone")}
+                value={editData().phone}
+                onChange={(v) => handleChange("phone", v)}
+              />
+              <TextInput
+                label={t("customer.mobilePhone")}
+                value={editData().mobile_phone}
+                onChange={(v) => handleChange("mobile_phone", v)}
+              />
+            </InputGroup>
+            <InputGroup>
+              <DateInput
+                label={t("customer.birthdate")}
+                value={editData().birthdate}
+                onChange={(v) => handleChange("birthdate", v)}
+              />
+              <DateInput
+                label={t("customer.customerSince")}
+                value={editData().customer_since}
+                onChange={(v) => handleChange("customer_since", v)}
+              />
+            </InputGroup>
+            <InputGroup>
+              <SelectBox
+                label={t("customer.responsibleEmployee")}
+                selected={editData().responsible_employee_id}
+                possibleValues={employeeEntries() ?? []}
+                onSelect={(value) =>
+                  handleChange(
+                    "responsible_employee_id",
+                    value as number | null
+                  )
+                }
+              />
+            </InputGroup>
+          </div>
+        }
+        right={
+          <div class={styles.customerNotes}>
+            <TextInput
+              label={t("customer.note")}
+              value={editData().note}
+              onChange={(v) => handleChange("note", v)}
+              rows={3}
+            />
+          </div>
+        }
       />
 
       <div class={styles.actionRow}>
         <Button color="danger" onClick={deleteData}>
           {t("general.delete")}
         </Button>
+        <Show when={props.selectedId !== null}>
+          <div class={styles.idHint}>
+            {t("customer.idHint", { id: props.selectedId ?? -1 })}
+          </div>
+        </Show>
         <div class={styles.actionRowSpacer}></div>
         <Button onClick={() => props.setSelectedId(undefined)}>
           {t("general.cancel")}
@@ -141,11 +219,6 @@ export default function CustomerDetails(props: {
           {t("general.save")}
         </Button>
       </div>
-      <Show when={props.selectedId !== null}>
-        <div style="opacity: 0.5; margin-top: 0.6em">
-          {t("customer.idHint", { id: props.selectedId ?? -1 })}
-        </div>
-      </Show>
     </div>
   );
 }

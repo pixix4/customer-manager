@@ -26,7 +26,7 @@ export const dict = {
     birthdate: "Birthdate",
     customerSince: "Customer since",
     note: "Note",
-    responsible_employee: "Responsible employee",
+    responsibleEmployee: "Responsible employee",
   },
   settings: {
     title: "Settings",

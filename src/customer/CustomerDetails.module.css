@@ -1,18 +1,28 @@
-.tag-details {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.customer-fields,
+.customer-notes {
+  padding: 0.5em 1em 0;
+}
+
+.customer-notes {
   height: 100%;
-  padding: 1em;
-  overflow: auto;
+}
+
+.customer-notes > div {
+  height: calc(100% - 2em);
 }
 
 .action-row {
   display: flex;
   gap: 0.4em;
+  border-top: solid 1px var(--border-color);
+  padding: 1em;
+  align-items: center;
 }
 
 .action-row-spacer {
   flex-grow: 1;
+}
+
+.id-hint {
+  opacity: 0.5;
 }

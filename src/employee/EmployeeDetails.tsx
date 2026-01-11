@@ -83,6 +83,11 @@ export default function EmployeeDetails(props: {
         <Button color="danger" onClick={deleteData}>
           {t("general.delete")}
         </Button>
+        <Show when={props.selectedId !== null}>
+          <div class={styles.idHint}>
+            {t("employee.idHint", { id: props.selectedId ?? -1 })}
+          </div>
+        </Show>
         <div class={styles.actionRowSpacer}></div>
         <Button onClick={() => props.setSelectedId(undefined)}>
           {t("general.cancel")}
@@ -91,11 +96,6 @@ export default function EmployeeDetails(props: {
           {t("general.save")}
         </Button>
       </div>
-      <Show when={props.selectedId !== null}>
-        <div style="opacity: 0.5; margin-top: 0.6em">
-          {t("employee.idHint", { id: props.selectedId ?? -1 })}
-        </div>
-      </Show>
     </div>
   );
 }

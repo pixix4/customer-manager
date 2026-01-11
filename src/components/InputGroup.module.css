@@ -1,0 +1,12 @@
+.input-group {
+  display: flex;
+  gap: 0.5em;
+}
+
+.input-group + .input-group {
+  margin-top: -1em;
+}
+
+.input-group > * {
+  flex-grow: 1;
+}
