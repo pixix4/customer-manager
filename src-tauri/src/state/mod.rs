@@ -8,6 +8,9 @@ use employee::EmployeeState;
 use sqlx::sqlite::SqlitePoolOptions;
 use sqlx::{Pool, Sqlite};
 
+use crate::state::appointment::AppointmentState;
+
+mod appointment;
 mod customer;
 mod employee;
 
@@ -16,6 +19,7 @@ pub struct State {
     _pool: Arc<Pool<Sqlite>>,
     pub employee: EmployeeState,
     pub customer: CustomerState,
+    pub appointment: AppointmentState,
 }
 
 impl State {
@@ -35,11 +39,13 @@ impl State {
 
         let employee = EmployeeState::new(pool.clone());
         let customer = CustomerState::new(pool.clone());
+        let appointment = AppointmentState::new(pool.clone());
 
         Self {
             _pool: pool,
             employee,
             customer,
+            appointment,
         }
     }
 }

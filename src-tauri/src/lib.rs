@@ -100,6 +100,55 @@ async fn delete_customer(state: tauri::State<'_, State>, id: i64) -> Result<(), 
         .map_err(|e| e.to_string())
 }
 
+#[tauri::command]
+async fn get_customer_appointment_list(
+    state: tauri::State<'_, State>,
+    customer_id: i64,
+) -> Result<Vec<model::CustomerAppointmentDto>, String> {
+    state
+        .inner()
+        .appointment
+        .get_appointment_list(customer_id)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn get_customer_appointment_by_id(
+    state: tauri::State<'_, State>,
+    id: i64,
+) -> Result<Option<model::CustomerAppointmentDto>, String> {
+    state
+        .inner()
+        .appointment
+        .get_appointment_by_id(id)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn store_customer_appointment(
+    state: tauri::State<'_, State>,
+    appointment: model::EditCustomerAppointmentDto,
+) -> Result<i64, String> {
+    state
+        .inner()
+        .appointment
+        .store_appointment(appointment)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn delete_customer_appointment(state: tauri::State<'_, State>, id: i64) -> Result<(), String> {
+    state
+        .inner()
+        .appointment
+        .delete_appointment(id)
+        .await
+        .map_err(|e| e.to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub async fn run() {
     let state = State::new().await;
@@ -116,6 +165,10 @@ pub async fn run() {
             get_customer_by_id,
             store_customer,
             delete_customer,
+            get_customer_appointment_list,
+            get_customer_appointment_by_id,
+            store_customer_appointment,
+            delete_customer_appointment,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

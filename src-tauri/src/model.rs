@@ -1,4 +1,4 @@
-use chrono::NaiveDate;
+use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
@@ -43,4 +43,27 @@ pub struct EditCustomerDto {
     pub customer_since: Option<NaiveDate>,
     pub note: String,
     pub responsible_employee_id: Option<i64>,
+}
+
+#[derive(Serialize)]
+pub struct CustomerAppointmentDto {
+    pub id: i64,
+    pub customer_id: i64,
+    pub number: i64,
+    pub start_date: NaiveDateTime,
+    pub duration_minutes: i64,
+    pub end_date: NaiveDateTime,
+    pub period_days: Option<i64>,
+    pub treatment: String,
+    pub employee: Option<EmployeeDto>,
+}
+
+#[derive(Deserialize)]
+pub struct EditCustomerAppointmentDto {
+    pub id: Option<i64>,
+    pub customer_id: i64,
+    pub start_date: NaiveDateTime,
+    pub duration_minutes: i64,
+    pub treatment: String,
+    pub employee_id: Option<i64>,
 }

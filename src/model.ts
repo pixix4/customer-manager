@@ -41,6 +41,27 @@ export type EditCustomerDto = {
   responsible_employee_id: number | null;
 };
 
+export type CustomerAppointmentDto = {
+  id: number;
+  customer_id: number;
+  number: number;
+  start_date: string;
+  duration_minutes: number;
+  end_date: string;
+  period_days: number | null;
+  treatment: string;
+  employee: EmployeeDto | null;
+};
+
+export type EditCustomerAppointmentDto = {
+  id: number | null;
+  customer_id: number;
+  start_date: string;
+  duration_minutes: number;
+  treatment: string;
+  employee_id: number | null;
+};
+
 export async function getEmployeeList(): Promise<EmployeeDto[]> {
   return await invoke<EmployeeDto[]>("get_employee_list");
 }
@@ -107,4 +128,51 @@ export function createCustomerByIdResource(
   id: Accessor<number | null>
 ): ResourceReturn<CustomerDto | null> {
   return createResource(id, getCustomerById);
+}
+
+export async function getCustomerAppointmentList(
+  customerId: number
+): Promise<CustomerAppointmentDto[]> {
+  return await invoke<CustomerAppointmentDto[]>(
+    "get_customer_appointment_list",
+    {
+      customerId,
+    }
+  );
+}
+
+export async function getCustomerAppointmentById(
+  id: number | null
+): Promise<CustomerAppointmentDto | null> {
+  if (id == null) {
+    return null;
+  }
+
+  return (
+    (await invoke<CustomerAppointmentDto>("get_customer_appointment_by_id", {
+      id,
+    })) ?? null
+  );
+}
+
+export async function storeCustomerAppointment(
+  appointment: EditCustomerAppointmentDto
+): Promise<number> {
+  return await invoke<number>("store_customer_appointment", { appointment });
+}
+
+export async function deleteCustomerAppointment(id: number) {
+  await invoke("delete_customer_appointment", { id });
+}
+
+export function createCustomerAppointmentListResource(
+  customerId: Accessor<number>
+): ResourceReturn<CustomerAppointmentDto[]> {
+  return createResource(customerId, getCustomerAppointmentList);
+}
+
+export function createCustomerAppointmentByIdResource(
+  id: Accessor<number | null>
+): ResourceReturn<CustomerAppointmentDto | null> {
+  return createResource(id, getCustomerAppointmentById);
 }

@@ -22,7 +22,7 @@ export default function App() {
   const [showSettingsDialog, setShowSettingsDialog] = createSignal(false);
 
   const [selectedId, setSelectedId] = createSignal<number | null | undefined>(
-    undefined
+    2
   );
   const [customers, { refetch }] = createCustomerListResource();
 

@@ -72,7 +72,7 @@ export default function EmployeeDetails(props: {
   };
 
   return (
-    <div class={styles.tagDetails}>
+    <div class={styles.employeeDetails}>
       <TextInput
         label={t("employee.name")}
         value={editData().name}

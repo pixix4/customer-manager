@@ -11,9 +11,10 @@ import {
 } from "../model";
 import { useTranslation } from "../lang/translate";
 import InputGroup from "../components/InputGroup";
-import DateInput from "../components/DateInput";
+import DateInput from "../components/SimpleInput";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
 import SplitView from "../components/SplitView";
+import CustomerAppointmentList from "./CustomerAppointmentList";
 
 const emptyEditData: EditCustomerDto = {
   id: null,
@@ -166,13 +167,15 @@ export default function CustomerDetails(props: {
             <InputGroup>
               <DateInput
                 label={t("customer.birthdate")}
-                value={editData().birthdate}
+                value={editData().birthdate ?? ""}
                 onChange={(v) => handleChange("birthdate", v)}
+                type="date"
               />
               <DateInput
                 label={t("customer.customerSince")}
-                value={editData().customer_since}
+                value={editData().customer_since ?? ""}
                 onChange={(v) => handleChange("customer_since", v)}
+                type="date"
               />
             </InputGroup>
             <InputGroup>
@@ -219,6 +222,10 @@ export default function CustomerDetails(props: {
           {t("general.save")}
         </Button>
       </div>
+
+      <Show when={props.selectedId !== null}>
+        <CustomerAppointmentList customerId={props.selectedId ?? 0} />
+      </Show>
     </div>
   );
 }
