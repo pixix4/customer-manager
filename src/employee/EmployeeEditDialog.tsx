@@ -22,7 +22,7 @@ export default function EmployeeEditDialog(props: {
     <Dialog
       show={props.show}
       setShow={props.setShow}
-      title={t("employee.title")}
+      title={t("employee.dialogTitle")}
       actionLabel={t("employee.create")}
       onAction={() => setSelectedId(null)}
     >

@@ -24,7 +24,9 @@ export default function EmployeeDetails(props: {
 
   const [employee] = createEmployeeByIdResource(() => props.selectedId);
 
-  const [editData, setEditData] = createSignal<EditEmployeeDto>(emptyEditData);
+  const [editData, setEditData] = createSignal<EditEmployeeDto>({
+    ...emptyEditData,
+  });
   const handleChange = <K extends keyof EditEmployeeDto>(
     key: K,
     value: EditEmployeeDto[K]
@@ -33,6 +35,11 @@ export default function EmployeeDetails(props: {
   };
 
   createEffect(async () => {
+    if (props.selectedId === null || props.selectedId === undefined) {
+      setEditData({ ...emptyEditData });
+      return;
+    }
+
     if (employee.loading || employee.error) {
       return;
     }
