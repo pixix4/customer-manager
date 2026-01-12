@@ -5,6 +5,18 @@
   min-height: 10em;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  padding: 0.2em 1em;
+}
+.header-title {
+  font-weight: bold;
+}
+.header-spacer {
+  flex-grow: 1;
+}
+
 .loading,
 .error {
   position: relative;
@@ -20,6 +32,24 @@
   color: var(--danger-color);
 }
 
-.appointments-table {
+.table {
   width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: left;
+    line-height: 3em;
+
+    &:first-of-type {
+      padding-left: 1em;
+    }
+    &:last-of-type {
+      padding-right: 1em;
+    }
+  }
+
+  tr {
+    border-bottom: solid 1px var(--border-color);
+  }
 }

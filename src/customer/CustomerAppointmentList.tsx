@@ -6,10 +6,10 @@ import {
 } from "../model";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { RiSystemErrorWarningLine } from "solid-icons/ri";
-import Button from "../components/Button";
 import CustomerAppointmentEditDialog from "./CustomerAppointmentEditDialog";
 import { useTranslation } from "../lang/translate";
 import { formatDays, formatMinutes } from "../datetime";
+import Button from "../components/Button";
 
 export default function CustomerAppointmentList(props: { customerId: number }) {
   const { t } = useTranslation();
@@ -24,9 +24,13 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
 
   return (
     <div class={styles.appointments}>
-      <Button onClick={() => setSelectedId(null)}>
-        {t("customer.appointment.create")}
-      </Button>
+      <div class={styles.header}>
+        <span class={styles.headerTitle}>Appointments</span>
+        <div class={styles.headerSpacer}></div>
+        <Button color="flat" onClick={() => setSelectedId(null)}>
+          {t("customer.appointment.create")}
+        </Button>
+      </div>
       <Switch>
         <Match when={appointments.loading}>
           <div class={styles.loading}>
@@ -39,7 +43,7 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
           </div>
         </Match>
         <Match when={appointments()}>
-          <table class={styles.appointmentsTable}>
+          <table class={styles.table}>
             <thead>
               <tr>
                 <th>{t("customer.appointment.number")}</th>

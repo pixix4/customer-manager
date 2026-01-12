@@ -3,7 +3,7 @@ import styles from "./Button.module.css";
 
 export default function Button(props: {
   onClick?: () => void;
-  color?: "default" | "primary" | "danger";
+  color?: "default" | "primary" | "danger" | "flat";
   disabled?: boolean;
   children: JSX.Element;
 }) {
@@ -13,6 +13,7 @@ export default function Button(props: {
       classList={{
         [styles.primary]: props.color === "primary",
         [styles.danger]: props.color === "danger",
+        [styles.flat]: props.color === "flat",
       }}
       onClick={props.onClick}
       disabled={props.disabled}

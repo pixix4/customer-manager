@@ -6,6 +6,10 @@
   background-color: var(--background-secondary);
   color: var(--text-primary);
   border: solid 1px var(--border-color);
+
+  &:hover {
+    background-color: var(--background-primary);
+  }
 }
 
 .button.primary {
@@ -15,6 +19,9 @@
 .button.danger {
   background-color: var(--danger-color);
   color: var(--danger-text);
+}
+.button.flat {
+  border: none;
 }
 
 .button:disabled {
