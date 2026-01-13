@@ -45,5 +45,6 @@ export const dict = {
   settings: {
     title: "Settings",
     language: "Language",
+    fontSize: "Font size",
   },
 };

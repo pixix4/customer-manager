@@ -9,7 +9,7 @@ import {
   getEmployeeList,
   storeCustomerAppointment,
 } from "../model";
-import { useTranslation } from "../lang/translate";
+import { useTranslation } from "../preferences";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
 import SimpleInput from "../components/SimpleInput";
 import InputGroup from "../components/InputGroup";
@@ -53,7 +53,7 @@ export default function CustomerAppointmentDetails(props: {
   setSelectedId: (id: number | undefined) => void;
   onUpdate: () => void;
 }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
 
   const [appointment] = createCustomerAppointmentByIdResource(
     () => props.selectedId

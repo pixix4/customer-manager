@@ -1,5 +1,5 @@
 import * as i18n from "@solid-primitives/i18n";
-import { RawDictionary } from "./translate";
+import { RawDictionary } from "../preferences";
 
 export const dict: RawDictionary = {
   general: {
@@ -46,5 +46,6 @@ export const dict: RawDictionary = {
   settings: {
     title: "Einstellungen",
     language: "Sprache",
+    fontSize: "Schriftgröße",
   },
 };

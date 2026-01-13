@@ -1,13 +1,15 @@
+import { createEffect } from "solid-js";
 import Dialog from "../components/Dialog";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
-import { Locale, useTranslation } from "../lang/translate";
+import SimpleInput from "../components/SimpleInput";
+import { Locale, usePreferences } from "../preferences";
 import styles from "./SettingsDialog.module.css";
 
 export default function SettingsDialog(props: {
   show: boolean;
   setShow: (show: boolean) => void;
 }) {
-  const { t, currentLocale, setCurrentLocale } = useTranslation();
+  const { t, language, setLanguage, fontSize, setFontSize } = usePreferences();
 
   const languageEntries: SelectBoxPossibleValue[] = [
     {
@@ -20,6 +22,13 @@ export default function SettingsDialog(props: {
     },
   ];
 
+  createEffect(() => {
+    document.documentElement.style.setProperty(
+      "--font-size",
+      `${fontSize()}px`
+    );
+  });
+
   return (
     <Dialog
       show={props.show}
@@ -29,9 +38,16 @@ export default function SettingsDialog(props: {
       <div class={styles.content}>
         <SelectBox
           label={t("settings.language")}
-          selected={currentLocale()}
+          selected={language()}
           possibleValues={languageEntries}
-          onSelect={(value) => setCurrentLocale(value as Locale)}
+          onSelect={(value) => setLanguage(value as Locale)}
+        />
+
+        <SimpleInput
+          label={t("settings.fontSize")}
+          type="number"
+          value={fontSize().toString()}
+          onChange={(v) => setFontSize(parseInt(v))}
         />
       </div>
     </Dialog>

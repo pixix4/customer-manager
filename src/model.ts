@@ -62,6 +62,16 @@ export type EditCustomerAppointmentDto = {
   employee_id: number | null;
 };
 
+export type PreferenceDto = {
+  key: string;
+  value: string;
+};
+
+export type EditPreferenceDto = {
+  key: string;
+  value: string | null;
+};
+
 export async function getEmployeeList(): Promise<EmployeeDto[]> {
   return await invoke<EmployeeDto[]>("get_employee_list");
 }
@@ -175,4 +185,12 @@ export function createCustomerAppointmentByIdResource(
   id: Accessor<number | null>
 ): ResourceReturn<CustomerAppointmentDto | null> {
   return createResource(id, getCustomerAppointmentById);
+}
+
+export async function getPreferenceList(): Promise<PreferenceDto[]> {
+  return await invoke<PreferenceDto[]>("get_preference_list");
+}
+
+export async function storePreference(preference: EditPreferenceDto) {
+  return await invoke("store_preference", { preference });
 }

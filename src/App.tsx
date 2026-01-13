@@ -5,7 +5,7 @@ import {
   RiSystemSettings4Fill,
   RiUserFacesAccountCircleFill,
 } from "solid-icons/ri";
-import { useTranslation } from "./lang/translate";
+import { useTranslation } from "./preferences";
 import SettingsDialog from "./settings/SettingsDialog";
 import CustomerList from "./customer/CustomerList";
 import { autofocus } from "@solid-primitives/autofocus";
@@ -14,7 +14,7 @@ import SplitView from "./components/SplitView";
 import CustomerDetails from "./customer/CustomerDetails";
 
 export default function App() {
-  const { t } = useTranslation();
+  const t = useTranslation();
 
   const [search, setSearch] = createSignal("");
   const [showEmployeeEditDialog, setShowEmployeeEditDialog] =

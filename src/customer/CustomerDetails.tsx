@@ -9,7 +9,7 @@ import {
   getEmployeeList,
   storeCustomer,
 } from "../model";
-import { useTranslation } from "../lang/translate";
+import { useTranslation } from "../preferences";
 import InputGroup from "../components/InputGroup";
 import DateInput from "../components/SimpleInput";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
@@ -53,7 +53,7 @@ export default function CustomerDetails(props: {
   setSelectedId: (id: number | undefined) => void;
   onUpdate: () => void;
 }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
 
   const [customer] = createCustomerByIdResource(() => props.selectedId);
   const [employeeEntries] = createResource(getEmployeeEntries);

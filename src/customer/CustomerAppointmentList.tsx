@@ -7,12 +7,12 @@ import {
 import LoadingSpinner from "../components/LoadingSpinner";
 import { RiSystemErrorWarningLine } from "solid-icons/ri";
 import CustomerAppointmentEditDialog from "./CustomerAppointmentEditDialog";
-import { useTranslation } from "../lang/translate";
+import { useTranslation } from "../preferences";
 import { formatDays, formatMinutes } from "../datetime";
 import Button from "../components/Button";
 
 export default function CustomerAppointmentList(props: { customerId: number }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
 
   const [appointments, { refetch }] = createCustomerAppointmentListResource(
     () => props.customerId

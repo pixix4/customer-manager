@@ -140,11 +140,39 @@ async fn store_customer_appointment(
 }
 
 #[tauri::command]
-async fn delete_customer_appointment(state: tauri::State<'_, State>, id: i64) -> Result<(), String> {
+async fn delete_customer_appointment(
+    state: tauri::State<'_, State>,
+    id: i64,
+) -> Result<(), String> {
     state
         .inner()
         .appointment
         .delete_appointment(id)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn get_preference_list(
+    state: tauri::State<'_, State>,
+) -> Result<Vec<model::PreferenceDto>, String> {
+    state
+        .inner()
+        .preference
+        .get_preference_list()
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn store_preference(
+    state: tauri::State<'_, State>,
+    preference: model::EditPreferenceDto,
+) -> Result<(), String> {
+    state
+        .inner()
+        .preference
+        .store_preference(preference)
         .await
         .map_err(|e| e.to_string())
 }
@@ -169,6 +197,8 @@ pub async fn run() {
             get_customer_appointment_by_id,
             store_customer_appointment,
             delete_customer_appointment,
+            get_preference_list,
+            store_preference,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

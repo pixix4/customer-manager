@@ -4,7 +4,7 @@ import { autofocus } from "@solid-primitives/autofocus";
 import { EmployeeDto } from "../model";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { RiSystemErrorWarningLine } from "solid-icons/ri";
-import { useTranslation } from "../lang/translate";
+import { useTranslation } from "../preferences";
 import replaceSpecialCharacters from "replace-special-characters";
 
 function searchEmployee(customer: EmployeeDto, search: string): boolean {
@@ -37,7 +37,7 @@ export default function EmployeeList(props: {
   selectedId: number | null | undefined;
   setSelectedId: (id: number) => void;
 }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
   const [search, setSearch] = createSignal("");
 
   const filteredEmployees = () => {

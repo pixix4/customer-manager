@@ -8,7 +8,7 @@ import {
   EditEmployeeDto,
   storeEmployee,
 } from "../model";
-import { useTranslation } from "../lang/translate";
+import { useTranslation } from "../preferences";
 
 const emptyEditData: EditEmployeeDto = {
   id: null,
@@ -20,7 +20,7 @@ export default function EmployeeDetails(props: {
   setSelectedId: (id: number | undefined) => void;
   onUpdate: () => void;
 }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
 
   const [employee] = createEmployeeByIdResource(() => props.selectedId);
 

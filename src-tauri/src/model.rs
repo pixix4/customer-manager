@@ -67,3 +67,15 @@ pub struct EditCustomerAppointmentDto {
     pub treatment: String,
     pub employee_id: Option<i64>,
 }
+
+#[derive(Serialize)]
+pub struct PreferenceDto {
+    pub key: String,
+    pub value: String,
+}
+
+#[derive(Deserialize)]
+pub struct EditPreferenceDto {
+    pub key: String,
+    pub value: Option<String>,
+}

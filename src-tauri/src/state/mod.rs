@@ -3,16 +3,18 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::{env, fs};
 
-use customer::CustomerState;
-use employee::EmployeeState;
 use sqlx::sqlite::SqlitePoolOptions;
 use sqlx::{Pool, Sqlite};
 
 use crate::state::appointment::AppointmentState;
+use crate::state::customer::CustomerState;
+use crate::state::employee::EmployeeState;
+use crate::state::preference::PreferenceState;
 
 mod appointment;
 mod customer;
 mod employee;
+mod preference;
 
 #[derive(Clone)]
 pub struct State {
@@ -20,6 +22,7 @@ pub struct State {
     pub employee: EmployeeState,
     pub customer: CustomerState,
     pub appointment: AppointmentState,
+    pub preference: PreferenceState,
 }
 
 impl State {
@@ -40,12 +43,14 @@ impl State {
         let employee = EmployeeState::new(pool.clone());
         let customer = CustomerState::new(pool.clone());
         let appointment = AppointmentState::new(pool.clone());
+        let preference = PreferenceState::new(pool.clone());
 
         Self {
             _pool: pool,
             employee,
             customer,
             appointment,
+            preference,
         }
     }
 }
