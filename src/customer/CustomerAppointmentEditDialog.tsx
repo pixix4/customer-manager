@@ -1,30 +1,25 @@
 import Dialog from "../components/Dialog";
-import { createSignal } from "solid-js";
 import CustomerAppointmentDetails from "./CustomerAppointmentDetails";
 import { useTranslation } from "../lang/translate";
 
 export default function CustomerAppointmentEditDialog(props: {
   customerId: number;
-  show: boolean;
-  setShow: (show: boolean) => void;
+  selectedId: number | null | undefined;
+  setSelectedId: (id: number | null | undefined) => void;
   onUpdate: () => void;
 }) {
   const { t } = useTranslation();
 
-  const [selectedId, setSelectedId] = createSignal<number | null | undefined>(
-    undefined
-  );
-
   return (
     <Dialog
-      show={props.show}
-      setShow={props.setShow}
+      show={props.selectedId !== undefined}
+      setShow={() => props.setSelectedId(undefined)}
       title={t("customer.appointment.dialogTitle")}
     >
       <CustomerAppointmentDetails
         customerId={props.customerId}
-        selectedId={selectedId() ?? null}
-        setSelectedId={setSelectedId}
+        selectedId={props.selectedId ?? null}
+        setSelectedId={props.setSelectedId}
         onUpdate={props.onUpdate}
       />
     </Dialog>

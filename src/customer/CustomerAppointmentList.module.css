@@ -40,6 +40,7 @@
   td {
     text-align: left;
     line-height: 3em;
+    padding-left: 0 0.4em;
 
     &:first-of-type {
       padding-left: 1em;
@@ -51,5 +52,10 @@
 
   tr {
     border-bottom: solid 1px var(--border-color);
+  }
+
+  tbody tr:hover {
+    background-color: var(--background-primary);
+    cursor: pointer;
   }
 }

@@ -59,7 +59,10 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
               <For each={appointments()}>
                 {(appointment) => {
                   return (
-                    <CustomerAppointmentListEntry appointment={appointment} />
+                    <CustomerAppointmentListEntry
+                      appointment={appointment}
+                      setSelectedId={setSelectedId}
+                    />
                   );
                 }}
               </For>
@@ -70,8 +73,8 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
 
       <CustomerAppointmentEditDialog
         customerId={props.customerId}
-        show={selectedId() !== undefined}
-        setShow={() => setSelectedId(undefined)}
+        selectedId={selectedId()}
+        setSelectedId={setSelectedId}
         onUpdate={refetch}
       />
     </div>
@@ -80,9 +83,10 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
 
 function CustomerAppointmentListEntry(props: {
   appointment: CustomerAppointmentDto;
+  setSelectedId: (id: number) => void;
 }) {
   return (
-    <tr>
+    <tr onClick={() => props.setSelectedId(props.appointment.id)}>
       <td>{props.appointment.number}</td>
       <td>{new Date(props.appointment.start_date).toLocaleString()}</td>
       <td>{formatMinutes(props.appointment.duration_minutes)}</td>

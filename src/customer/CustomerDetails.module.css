@@ -1,3 +1,16 @@
+.customer-details {
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  & > div {
+    height: initial;
+  }
+}
+
 .customer-fields,
 .customer-notes {
   padding: 0.5em 1em 0;
