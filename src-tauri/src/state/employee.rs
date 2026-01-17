@@ -109,11 +109,11 @@ struct EmployeeRow {
     pub name: String,
 }
 
-impl Into<EmployeeDto> for EmployeeRow {
-    fn into(self) -> EmployeeDto {
+impl From<EmployeeRow> for EmployeeDto {
+    fn from(row: EmployeeRow) -> EmployeeDto {
         EmployeeDto {
-            id: self.id,
-            name: self.name,
+            id: row.id,
+            name: row.name,
         }
     }
 }

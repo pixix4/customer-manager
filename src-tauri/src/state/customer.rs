@@ -125,8 +125,8 @@ impl CustomerState {
             .bind(&customer.address_city)
             .bind(&customer.phone)
             .bind(&customer.mobile_phone)
-            .bind(&customer.birthdate)
-            .bind(&customer.customer_since)
+            .bind(customer.birthdate)
+            .bind(customer.customer_since)
             .bind(&customer.note)
             .bind(customer.responsible_employee_id)
             .execute(connection.as_mut())
@@ -185,26 +185,26 @@ struct CustomerRow {
     pub responsible_employee_name: Option<String>,
 }
 
-impl Into<CustomerDto> for CustomerRow {
-    fn into(self) -> CustomerDto {
+impl From<CustomerRow> for CustomerDto {
+    fn from(row: CustomerRow) -> CustomerDto {
         let responsible_employee =
-            match (self.responsible_employee_id, self.responsible_employee_name) {
+            match (row.responsible_employee_id, row.responsible_employee_name) {
                 (Some(id), Some(name)) => Some(EmployeeDto { id, name }),
                 _ => None,
             };
 
         CustomerDto {
-            id: self.id,
-            title: self.title,
-            first_name: self.first_name,
-            last_name: self.last_name,
-            address_street: self.address_street,
-            address_city: self.address_city,
-            phone: self.phone,
-            mobile_phone: self.mobile_phone,
-            birthdate: self.birthdate,
-            customer_since: self.customer_since,
-            note: self.note,
+            id: row.id,
+            title: row.title,
+            first_name: row.first_name,
+            last_name: row.last_name,
+            address_street: row.address_street,
+            address_city: row.address_city,
+            phone: row.phone,
+            mobile_phone: row.mobile_phone,
+            birthdate: row.birthdate,
+            customer_since: row.customer_since,
+            note: row.note,
             responsible_employee,
         }
     }

@@ -67,11 +67,11 @@ struct PreferenceRow {
     pub value: String,
 }
 
-impl Into<PreferenceDto> for PreferenceRow {
-    fn into(self) -> PreferenceDto {
+impl From<PreferenceRow> for PreferenceDto {
+    fn from(row: PreferenceRow) -> PreferenceDto {
         PreferenceDto {
-            key: self.key,
-            value: self.value,
+            key: row.key,
+            value: row.value,
         }
     }
 }

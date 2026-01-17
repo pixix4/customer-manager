@@ -1,8 +1,8 @@
-use std::fs::File;
-use std::path::{Path, PathBuf};
+use std::fs::{self, File};
+use std::path::Path;
 use std::sync::Arc;
-use std::{env, fs};
 
+use log::info;
 use sqlx::sqlite::SqlitePoolOptions;
 use sqlx::{Pool, Sqlite};
 
@@ -26,14 +26,19 @@ pub struct State {
 }
 
 impl State {
-    pub async fn new() -> Self {
-        let path = get_file_path("../customer-manager.db");
+    pub async fn new(app_data_dir: &Path) -> Self {
+        fs::create_dir_all(app_data_dir).expect("failed to create app data dir");
 
-        ensure_db_file_exists(&path);
+        let db_path = app_data_dir.join("data.db");
+        info!("Using database file {:?}", db_path);
+
+        if !db_path.exists() {
+            File::create(&db_path).unwrap();
+        }
 
         let db_pool = SqlitePoolOptions::new()
             .max_connections(5)
-            .connect(&format!("sqlite:{}", path))
+            .connect(&format!("sqlite:{}", db_path.display()))
             .await
             .unwrap();
 
@@ -51,48 +56,6 @@ impl State {
             customer,
             appointment,
             preference,
-        }
-    }
-}
-
-fn get_file_path(path: &str) -> String {
-    // Define a relative path
-    let relative_path = PathBuf::from(path);
-
-    // Convert to an absolute path
-    let absolute_path = if relative_path.is_absolute() {
-        relative_path
-    } else {
-        env::current_dir().unwrap().join(relative_path)
-    };
-
-    // Normalize the path by removing redundant components like ".." and "."
-    let normalized_path: PathBuf = absolute_path.components().collect();
-
-    // Convert the absolute path to a String
-    normalized_path.to_string_lossy().into_owned()
-}
-
-fn ensure_db_file_exists(path: &str) {
-    // Get the parent directory of the file
-    if let Some(parent) = Path::new(path).parent() {
-        // Check if the parent directory exists
-        if !parent.exists() {
-            // Create the parent directory if it doesn't exist
-            match fs::create_dir_all(parent) {
-                Ok(_) => println!("Created parent directories: {:?}", parent),
-                Err(e) => println!("Failed to create parent directories: {}", e),
-            }
-        }
-    }
-
-    // Check if the file exists and create it if it doesn't
-    if Path::new(path).exists() {
-        println!("File exists: {}", path);
-    } else {
-        match File::create(path) {
-            Ok(_) => println!("Created an empty file: {}", path),
-            Err(e) => println!("Failed to create the file: {}", e),
         }
     }
 }

@@ -1,3 +1,5 @@
+use tauri::{Manager, path::BaseDirectory};
+
 use crate::state::State;
 
 mod error;
@@ -178,11 +180,19 @@ async fn store_preference(
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub async fn run() {
-    let state = State::new().await;
-
+pub fn run() {
     tauri::Builder::default()
-        .manage(state)
+        .setup(|app| {
+            let app_data_dir = app
+                .path()
+                .resolve("", BaseDirectory::AppData)
+                .expect("failed to resolve app data dir");
+
+            let state = tauri::async_runtime::block_on(async { State::new(&app_data_dir).await });
+            app.manage(state);
+
+            Ok(())
+        })
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             get_employee_list,

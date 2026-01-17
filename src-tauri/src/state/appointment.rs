@@ -60,7 +60,7 @@ impl AppointmentState {
         }
 
         appointments.reverse();
-        return Ok(appointments);
+        Ok(appointments)
     }
 
     pub async fn get_appointment_by_id(
@@ -140,11 +140,11 @@ impl AppointmentState {
             .bind(number.number + 1)
         };
 
-        q.bind(&appointment.customer_id)
-            .bind(&appointment.start_date)
-            .bind(&appointment.duration_minutes)
+        q.bind(appointment.customer_id)
+            .bind(appointment.start_date)
+            .bind(appointment.duration_minutes)
             .bind(&appointment.treatment)
-            .bind(&appointment.employee_id)
+            .bind(appointment.employee_id)
             .execute(connection.as_mut())
             .await?;
 
@@ -201,22 +201,22 @@ struct AppointmentRow {
     pub employee_name: Option<String>,
 }
 
-impl Into<CustomerAppointmentDto> for AppointmentRow {
-    fn into(self) -> CustomerAppointmentDto {
-        let employee = match (self.employee_id, self.employee_name) {
+impl From<AppointmentRow> for CustomerAppointmentDto {
+    fn from(row: AppointmentRow) -> CustomerAppointmentDto {
+        let employee = match (row.employee_id, row.employee_name) {
             (Some(id), Some(name)) => Some(EmployeeDto { id, name }),
             _ => None,
         };
 
         CustomerAppointmentDto {
-            id: self.id,
-            customer_id: self.customer_id,
-            number: self.number,
-            start_date: self.start_date,
-            duration_minutes: self.duration_minutes,
-            end_date: self.start_date,
+            id: row.id,
+            customer_id: row.customer_id,
+            number: row.number,
+            start_date: row.start_date,
+            duration_minutes: row.duration_minutes,
+            end_date: row.start_date,
             period_days: None,
-            treatment: self.treatment,
+            treatment: row.treatment,
             employee,
         }
     }
