@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" fill="#4779ea">
+    <rect x="0" y="0" width="128" height="128" />
+
+
+    <g transform="translate(0 -30) scale(0.82)" transform-origin="center">
+        <use xlink:href="#card" />
+    </g>
+
+    <g transform="translate(0 -21) scale(0.88)" transform-origin="center">
+        <use xlink:href="#card" />
+    </g>
+
+    <g transform="translate(0 -11) scale(0.94)" transform-origin="center">
+        <use xlink:href="#card" />
+    </g>
+
+    <g id="card" transform="translate(0, 29)">
+        <rect x="16" y="16" width="96" height="64" rx="8" fill="#FFF" stroke="#4779ea" stroke-width="3" />
+
+        <g transform="translate(24, 30) scale(1.5)">
+            <path
+                d="M20 22H4V20C4 17.2386 6.23858 15 9 15H15C17.7614 15 20 17.2386 20 20V22ZM12 13C8.68629 13 6 10.3137 6 7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7C18 10.3137 15.3137 13 12 13Z">
+            </path>
+        </g>
+
+        <rect x="64" y="35" width="32" height="4" rx="2" />
+        <rect x="64" y="45" width="32" height="4" rx="2" />
+        <rect x="64" y="55" width="20" height="4" rx="2" />
+    </g>
+</svg>
