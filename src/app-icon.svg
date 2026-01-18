@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink" fill="#4779ea">
-
+<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
         <mask id="cardContents">
             <rect width="100%" height="100%" fill="black" />
@@ -48,9 +47,5 @@
         </g>
     </defs>
 
-    <rect x="8" y="8" width="112" height="112" rx="16" />
-
-    <g transform="translate(16, 12) scale(0.9)" transform-origin="center">
-        <use xlink:href="#cardStack" color="#fff" />
-    </g>
+    <use xlink:href="#cardStack" />
 </svg>
