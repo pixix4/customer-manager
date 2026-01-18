@@ -47,5 +47,6 @@ export const dict: RawDictionary = {
     title: "Einstellungen",
     language: "Sprache",
     fontSize: "Schriftgröße",
+    openAppDataDirectory: "App-Ordner öffnen",
   },
 };

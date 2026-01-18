@@ -1,4 +1,5 @@
 use tauri::{Manager, path::BaseDirectory};
+use tauri_plugin_opener::OpenerExt;
 
 use crate::state::State;
 
@@ -179,6 +180,16 @@ async fn store_preference(
         .map_err(|e| e.to_string())
 }
 
+#[tauri::command]
+async fn open_app_data_directory(
+    app: tauri::AppHandle,
+    state: tauri::State<'_, State>,
+) -> Result<(), String> {
+    app.opener()
+        .reveal_item_in_dir(&state.inner().db_path)
+        .map_err(|e| e.to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -209,6 +220,7 @@ pub fn run() {
             delete_customer_appointment,
             get_preference_list,
             store_preference,
+            open_app_data_directory,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

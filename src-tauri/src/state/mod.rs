@@ -1,5 +1,5 @@
 use std::fs::{self, File};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use log::info;
@@ -19,6 +19,7 @@ mod preference;
 #[derive(Clone)]
 pub struct State {
     _pool: Arc<Pool<Sqlite>>,
+    pub db_path: PathBuf,
     pub employee: EmployeeState,
     pub customer: CustomerState,
     pub appointment: AppointmentState,
@@ -52,6 +53,7 @@ impl State {
 
         Self {
             _pool: pool,
+            db_path,
             employee,
             customer,
             appointment,

@@ -77,7 +77,7 @@ export async function getEmployeeList(): Promise<EmployeeDto[]> {
 }
 
 export async function getEmployeeById(
-  id: number | null
+  id: number | null,
 ): Promise<EmployeeDto | null> {
   if (id == null) {
     return null;
@@ -87,7 +87,7 @@ export async function getEmployeeById(
 }
 
 export async function storeEmployee(
-  employee: EditEmployeeDto
+  employee: EditEmployeeDto,
 ): Promise<number> {
   return await invoke<number>("store_employee", { employee });
 }
@@ -101,7 +101,7 @@ export function createEmployeeListResource(): ResourceReturn<EmployeeDto[]> {
 }
 
 export function createEmployeeByIdResource(
-  id: Accessor<number | null>
+  id: Accessor<number | null>,
 ): ResourceReturn<EmployeeDto | null> {
   return createResource(id, getEmployeeById);
 }
@@ -111,7 +111,7 @@ export async function getCustomerList(): Promise<CustomerDto[]> {
 }
 
 export async function getCustomerById(
-  id: number | null
+  id: number | null,
 ): Promise<CustomerDto | null> {
   if (id == null) {
     return null;
@@ -121,7 +121,7 @@ export async function getCustomerById(
 }
 
 export async function storeCustomer(
-  customer: EditCustomerDto
+  customer: EditCustomerDto,
 ): Promise<number> {
   return await invoke<number>("store_customer", { customer });
 }
@@ -135,24 +135,24 @@ export function createCustomerListResource(): ResourceReturn<CustomerDto[]> {
 }
 
 export function createCustomerByIdResource(
-  id: Accessor<number | null>
+  id: Accessor<number | null>,
 ): ResourceReturn<CustomerDto | null> {
   return createResource(id, getCustomerById);
 }
 
 export async function getCustomerAppointmentList(
-  customerId: number
+  customerId: number,
 ): Promise<CustomerAppointmentDto[]> {
   return await invoke<CustomerAppointmentDto[]>(
     "get_customer_appointment_list",
     {
       customerId,
-    }
+    },
   );
 }
 
 export async function getCustomerAppointmentById(
-  id: number | null
+  id: number | null,
 ): Promise<CustomerAppointmentDto | null> {
   if (id == null) {
     return null;
@@ -166,7 +166,7 @@ export async function getCustomerAppointmentById(
 }
 
 export async function storeCustomerAppointment(
-  appointment: EditCustomerAppointmentDto
+  appointment: EditCustomerAppointmentDto,
 ): Promise<number> {
   return await invoke<number>("store_customer_appointment", { appointment });
 }
@@ -176,13 +176,13 @@ export async function deleteCustomerAppointment(id: number) {
 }
 
 export function createCustomerAppointmentListResource(
-  customerId: Accessor<number>
+  customerId: Accessor<number>,
 ): ResourceReturn<CustomerAppointmentDto[]> {
   return createResource(customerId, getCustomerAppointmentList);
 }
 
 export function createCustomerAppointmentByIdResource(
-  id: Accessor<number | null>
+  id: Accessor<number | null>,
 ): ResourceReturn<CustomerAppointmentDto | null> {
   return createResource(id, getCustomerAppointmentById);
 }
@@ -193,4 +193,8 @@ export async function getPreferenceList(): Promise<PreferenceDto[]> {
 
 export async function storePreference(preference: EditPreferenceDto) {
   return await invoke("store_preference", { preference });
+}
+
+export async function openAppDataDirectory() {
+  return await invoke("open_app_data_directory");
 }

@@ -4,6 +4,8 @@ import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
 import SimpleInput from "../components/SimpleInput";
 import { Locale, usePreferences } from "../preferences";
 import styles from "./SettingsDialog.module.css";
+import Button from "../components/Button";
+import { openAppDataDirectory } from "../model";
 
 export default function SettingsDialog(props: {
   show: boolean;
@@ -25,7 +27,7 @@ export default function SettingsDialog(props: {
   createEffect(() => {
     document.documentElement.style.setProperty(
       "--font-size",
-      `${fontSize()}px`
+      `${fontSize()}px`,
     );
   });
 
@@ -49,6 +51,10 @@ export default function SettingsDialog(props: {
           value={fontSize().toString()}
           onChange={(v) => setFontSize(parseInt(v))}
         />
+
+        <Button onClick={openAppDataDirectory}>
+          {t("settings.openAppDataDirectory")}
+        </Button>
       </div>
     </Dialog>
   );

@@ -1,4 +1,5 @@
 import * as i18n from "@solid-primitives/i18n";
+import { openAppDataDirectory } from "../model";
 
 export const dict = {
   general: {
@@ -46,5 +47,6 @@ export const dict = {
     title: "Settings",
     language: "Language",
     fontSize: "Font size",
+    openAppDataDirectory: "Open app data directory",
   },
 };
