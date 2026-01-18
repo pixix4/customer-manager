@@ -1,5 +1,5 @@
 import { createEffect, createSignal, Show } from "solid-js";
-import TextInput from "../components/TextInput";
+import TextInput from "../components/input/TextInput";
 import styles from "./EmployeeDetails.module.css";
 import Button from "../components/Button";
 import {
@@ -29,7 +29,7 @@ export default function EmployeeDetails(props: {
   });
   const handleChange = <K extends keyof EditEmployeeDto>(
     key: K,
-    value: EditEmployeeDto[K]
+    value: EditEmployeeDto[K],
   ) => {
     setEditData((prev) => ({ ...prev, [key]: value }));
   };

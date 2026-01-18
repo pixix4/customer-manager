@@ -12,7 +12,6 @@ import { autofocus } from "@solid-primitives/autofocus";
 import { createCustomerListResource } from "./model";
 import SplitView from "./components/SplitView";
 import CustomerDetails from "./customer/CustomerDetails";
-import AppIcon from "./app-icon.svg";
 
 export default function App() {
   const t = useTranslation();

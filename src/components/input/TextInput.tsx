@@ -8,6 +8,7 @@ import {
 } from "solid-js";
 import styles from "./TextInput.module.css";
 import replaceSpecialCharacters from "replace-special-characters";
+import AbstractField from "./AbstractField";
 
 export default function TextInput(props: {
   label: string;
@@ -39,7 +40,7 @@ export default function TextInput(props: {
     }
 
     return props.autoComplete.filter((v) =>
-      replaceSpecialCharacters(v).toLowerCase().includes(s)
+      replaceSpecialCharacters(v).toLowerCase().includes(s),
     );
   };
 
@@ -108,7 +109,28 @@ export default function TextInput(props: {
   };
 
   return (
-    <div class={styles.textInput}>
+    <AbstractField
+      label={props.label}
+      dropdownVisible={canAutoComplete() && hasFocus()}
+      dropdown={
+        <div class={styles.textInputAutoComplete}>
+          <Index each={filteredAutoComplete()}>
+            {(entry, index) => (
+              <div
+                ref={(el) => (itemRefs[index] = el)}
+                class={styles.textInputAutoCompleteEntry}
+                classList={{ [styles.active]: index === activeRow() }}
+                onPointerDown={(e) => e.preventDefault()}
+                onClick={[autoCompleteClickHandler, entry]}
+                onPointerEnter={[autoCompleteEnterHandler, index]}
+              >
+                {entry()}
+              </div>
+            )}
+          </Index>
+        </div>
+      }
+    >
       <Show
         when={props.rows && props.rows > 1}
         fallback={
@@ -140,27 +162,6 @@ export default function TextInput(props: {
           onBlur={() => setHasFocus(false)}
         />
       </Show>
-      <label for={id} class={styles.textInputLabel}>
-        {props.label}
-      </label>
-      <Show when={canAutoComplete() && hasFocus()}>
-        <div class={styles.textInputAutoComplete}>
-          <Index each={filteredAutoComplete()}>
-            {(entry, index) => (
-              <div
-                ref={(el) => (itemRefs[index] = el)}
-                class={styles.textInputAutoCompleteEntry}
-                classList={{ [styles.active]: index === activeRow() }}
-                onPointerDown={(e) => e.preventDefault()}
-                onClick={[autoCompleteClickHandler, entry]}
-                onPointerEnter={[autoCompleteEnterHandler, index]}
-              >
-                {entry()}
-              </div>
-            )}
-          </Index>
-        </div>
-      </Show>
-    </div>
+    </AbstractField>
   );
 }

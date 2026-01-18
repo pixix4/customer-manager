@@ -1,11 +1,11 @@
 import { createEffect } from "solid-js";
 import Dialog from "../components/Dialog";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
-import SimpleInput from "../components/SimpleInput";
 import { Locale, usePreferences } from "../preferences";
 import styles from "./SettingsDialog.module.css";
 import Button from "../components/Button";
 import { openAppDataDirectory } from "../model";
+import NumberInput from "../components/input/NumberInput";
 
 export default function SettingsDialog(props: {
   show: boolean;
@@ -45,11 +45,12 @@ export default function SettingsDialog(props: {
           onSelect={(value) => setLanguage(value as Locale)}
         />
 
-        <SimpleInput
+        <NumberInput
           label={t("settings.fontSize")}
-          type="number"
-          value={fontSize().toString()}
-          onChange={(v) => setFontSize(parseInt(v))}
+          value={fontSize()}
+          onChange={setFontSize}
+          min={4}
+          max={64}
         />
 
         <Button onClick={openAppDataDirectory}>

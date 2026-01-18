@@ -1,5 +1,5 @@
 import { createEffect, createResource, createSignal, Show } from "solid-js";
-import TextInput from "../components/TextInput";
+import TextInput from "../components/input/TextInput";
 import styles from "./CustomerAppointmentDetails.module.css";
 import Button from "../components/Button";
 import {
@@ -20,6 +20,7 @@ import {
   updateDateTimeWithDate,
   updateDateTimeWithTime,
 } from "../datetime";
+import NumberInput from "../components/input/NumberInput";
 
 const emptyEditData: EditCustomerAppointmentDto = {
   id: null,
@@ -157,16 +158,12 @@ export default function CustomerAppointmentDetails(props: {
         />
       </InputGroup>
       <InputGroup>
-        <SimpleInput
+        <NumberInput
           label={t("customer.appointment.duration")}
-          value={editData().duration_minutes.toString()}
-          onChange={(v) => {
-            const parsed = parseInt(v);
-            if (parsed >= 0) {
-              handleChange("duration_minutes", parsed);
-            }
-          }}
-          type="number"
+          value={editData().duration_minutes}
+          onChange={(v) => handleChange("duration_minutes", v)}
+          min={0}
+          prefix={<span>min</span>}
         />
         <SelectBox
           label={t("customer.responsibleEmployee")}
@@ -176,16 +173,12 @@ export default function CustomerAppointmentDetails(props: {
             handleChange("employee_id", value as number | null)
           }
         />
-        <SimpleInput
+        <NumberInput
           label={t("customer.appointment.price")}
-          value={editData().price.toString()}
-          onChange={(v) => {
-            const parsed = parseInt(v);
-            if (parsed >= 0) {
-              handleChange("price", parsed);
-            }
-          }}
-          type="number"
+          value={editData().price}
+          onChange={(v) => handleChange("price", v)}
+          decimalPlaces={2}
+          prefix={<span>€</span>}
         />
       </InputGroup>
       <InputGroup>

@@ -1,5 +1,5 @@
 import { createEffect, createResource, createSignal, Show } from "solid-js";
-import TextInput from "../components/TextInput";
+import TextInput from "../components/input/TextInput";
 import styles from "./CustomerDetails.module.css";
 import Button from "../components/Button";
 import {
@@ -63,7 +63,7 @@ export default function CustomerDetails(props: {
   });
   const handleChange = <K extends keyof EditCustomerDto>(
     key: K,
-    value: EditCustomerDto[K]
+    value: EditCustomerDto[K],
   ) => {
     setEditData((prev) => ({ ...prev, [key]: value }));
   };
@@ -186,7 +186,7 @@ export default function CustomerDetails(props: {
                 onSelect={(value) =>
                   handleChange(
                     "responsible_employee_id",
-                    value as number | null
+                    value as number | null,
                   )
                 }
               />

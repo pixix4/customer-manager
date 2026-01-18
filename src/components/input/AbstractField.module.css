@@ -1,0 +1,85 @@
+.abstract-field {
+  position: relative;
+  margin: 1em 0;
+}
+
+.abstract-field-label {
+  position: absolute;
+  top: -0.4em;
+  left: 1em;
+  font-size: 0.8em;
+  line-height: 0.8em;
+  padding: 2px 0.4em;
+
+  background-color: var(--background-secondary);
+}
+
+.abstract-field-body {
+  appearance: none;
+  border: solid 2px var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--background-secondary);
+
+  width: 100%;
+  height: 100%;
+  margin: 0;
+
+  display: flex;
+  overflow: hidden;
+}
+
+.abstract-field-body-content {
+  flex-grow: 1;
+}
+.abstract-field-body-prefix,
+.abstract-field-body-suffix {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.8em;
+}
+
+.abstract-field-body-prefix {
+  border-right: solid 1px var(--border-color);
+}
+
+.abstract-field-body-suffix {
+  border-left: solid 1px var(--border-color);
+}
+
+.abstract-field-dropdown {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  top: calc(100% - 2px);
+  left: 0;
+  right: 0;
+  max-height: 20em;
+  overflow: auto;
+  background-color: var(--background-primary);
+
+  border: solid 2px var(--theme-primary);
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+
+  padding: 0.4em;
+}
+
+.abstract-field:focus-within {
+  .abstract-field-body {
+    border-color: var(--theme-primary);
+
+    &.dropdown {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  .abstract-field-body-content {
+    background-color: var(--background-primary);
+  }
+
+  .abstract-field-dropdown {
+    display: block;
+  }
+}

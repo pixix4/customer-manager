@@ -1,0 +1,29 @@
+.text-input-input {
+  appearance: none;
+  border: none;
+  outline: none;
+  background-color: transparent;
+
+  width: 100%;
+  height: 100%;
+  padding: 0.8em;
+  margin: 0;
+
+  resize: vertical;
+}
+
+.text-input-auto-complete-entry {
+  padding: 0.2em 0.6em;
+
+  user-select: none;
+  -webkit-user-select: none;
+
+  scroll-margin-block-start: 1em;
+  scroll-margin-block-end: 1em;
+}
+
+.text-input-auto-complete-entry.active {
+  padding: 0.2em 0.6em;
+  background-color: var(--background-secondary);
+  cursor: default;
+}
