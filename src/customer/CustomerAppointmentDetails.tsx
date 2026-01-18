@@ -27,6 +27,7 @@ const emptyEditData: EditCustomerAppointmentDto = {
   start_date: "",
   duration_minutes: 0,
   treatment: "",
+  price: 0,
   employee_id: null,
 };
 
@@ -56,7 +57,7 @@ export default function CustomerAppointmentDetails(props: {
   const t = useTranslation();
 
   const [appointment] = createCustomerAppointmentByIdResource(
-    () => props.selectedId
+    () => props.selectedId,
   );
   const [employeeEntries] = createResource(getEmployeeEntries);
 
@@ -65,7 +66,7 @@ export default function CustomerAppointmentDetails(props: {
   });
   const handleChange = <K extends keyof EditCustomerAppointmentDto>(
     key: K,
-    value: EditCustomerAppointmentDto[K]
+    value: EditCustomerAppointmentDto[K],
   ) => {
     setEditData((prev) => ({ ...prev, [key]: value }));
   };
@@ -110,6 +111,7 @@ export default function CustomerAppointmentDetails(props: {
         start_date: data.start_date,
         duration_minutes: data.duration_minutes,
         treatment: data.treatment,
+        price: data.price,
         employee_id: data.employee?.id ?? null,
       });
     } else {
@@ -173,6 +175,17 @@ export default function CustomerAppointmentDetails(props: {
           onSelect={(value) =>
             handleChange("employee_id", value as number | null)
           }
+        />
+        <SimpleInput
+          label={t("customer.appointment.price")}
+          value={editData().price.toString()}
+          onChange={(v) => {
+            const parsed = parseInt(v);
+            if (parsed >= 0) {
+              handleChange("price", parsed);
+            }
+          }}
+          type="number"
         />
       </InputGroup>
       <InputGroup>

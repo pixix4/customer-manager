@@ -55,6 +55,7 @@ pub struct CustomerAppointmentDto {
     pub end_date: NaiveDateTime,
     pub period_days: Option<i64>,
     pub treatment: String,
+    pub price: i64,
     pub employee: Option<EmployeeDto>,
 }
 
@@ -65,6 +66,7 @@ pub struct EditCustomerAppointmentDto {
     pub start_date: NaiveDateTime,
     pub duration_minutes: i64,
     pub treatment: String,
+    pub price: i64,
     pub employee_id: Option<i64>,
 }
 

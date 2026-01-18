@@ -29,6 +29,7 @@ export const dict: RawDictionary = {
     note: "Notiz",
     responsibleEmployee: "Zuständiger Mitarbeiter",
     appointment: {
+      title: "Termine",
       dialogTitle: "Terminverwaltung",
       create: "Termin erstellen",
       idHint: i18n.template<{ id: number }>("Termin-ID: {{ id }}"),
@@ -40,6 +41,7 @@ export const dict: RawDictionary = {
       endTime: "Ende",
       period: "Zeitraum",
       treatment: "Behandlung",
+      price: "Preis",
       employee: "Mitarbeiter",
     },
   },

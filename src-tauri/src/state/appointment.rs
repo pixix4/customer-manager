@@ -31,6 +31,7 @@ impl AppointmentState {
                 a.start_date,
                 a.duration_minutes,
                 a.treatment,
+                a.price,
                 e.id AS employee_id,
                 e.name AS employee_name
             FROM appointment a
@@ -77,6 +78,7 @@ impl AppointmentState {
                 a.start_date,
                 a.duration_minutes,
                 a.treatment,
+                a.price,
                 e.id AS employee_id,
                 e.name AS employee_name
             FROM appointment a
@@ -104,7 +106,8 @@ impl AppointmentState {
                     start_date = $3,
                     duration_minutes = $4,
                     treatment = $5,
-                    employee_id = $6
+                    price = $6,
+                    employee_id = $7
                 WHERE id = $1;
             "#,
             )
@@ -132,9 +135,10 @@ impl AppointmentState {
                     start_date,
                     duration_minutes,
                     treatment,
+                    price,
                     employee_id
                 )
-                VALUES ($1, $2, $3, $4, $5, $6);
+                VALUES ($1, $2, $3, $4, $5, $6, $7);
             "#,
             )
             .bind(number.number + 1)
@@ -144,6 +148,7 @@ impl AppointmentState {
             .bind(appointment.start_date)
             .bind(appointment.duration_minutes)
             .bind(&appointment.treatment)
+            .bind(appointment.price)
             .bind(appointment.employee_id)
             .execute(connection.as_mut())
             .await?;
@@ -197,6 +202,7 @@ struct AppointmentRow {
     pub start_date: NaiveDateTime,
     pub duration_minutes: i64,
     pub treatment: String,
+    pub price: i64,
     pub employee_id: Option<i64>,
     pub employee_name: Option<String>,
 }
@@ -217,6 +223,7 @@ impl From<AppointmentRow> for CustomerAppointmentDto {
             end_date: row.start_date,
             period_days: None,
             treatment: row.treatment,
+            price: row.price,
             employee,
         }
     }

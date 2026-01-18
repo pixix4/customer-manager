@@ -50,6 +50,7 @@ export type CustomerAppointmentDto = {
   end_date: string;
   period_days: number | null;
   treatment: string;
+  price: number;
   employee: EmployeeDto | null;
 };
 
@@ -59,6 +60,7 @@ export type EditCustomerAppointmentDto = {
   start_date: string;
   duration_minutes: number;
   treatment: string;
+  price: number;
   employee_id: number | null;
 };
 

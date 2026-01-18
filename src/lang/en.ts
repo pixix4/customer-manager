@@ -29,6 +29,7 @@ export const dict = {
     note: "Note",
     responsibleEmployee: "Responsible employee",
     appointment: {
+      title: "Appointments",
       dialogTitle: "Appointment management",
       create: "Create appointment",
       idHint: i18n.template<{ id: number }>("Appointment ID: {{ id }}"),
@@ -40,6 +41,7 @@ export const dict = {
       endTime: "End",
       period: "Period",
       treatment: "Treatment",
+      price: "Price",
       employee: "Employee",
     },
   },

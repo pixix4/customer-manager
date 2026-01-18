@@ -15,17 +15,19 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
   const t = useTranslation();
 
   const [appointments, { refetch }] = createCustomerAppointmentListResource(
-    () => props.customerId
+    () => props.customerId,
   );
 
   const [selectedId, setSelectedId] = createSignal<number | null | undefined>(
-    undefined
+    undefined,
   );
 
   return (
     <div class={styles.appointments}>
       <div class={styles.header}>
-        <span class={styles.headerTitle}>Appointments</span>
+        <span class={styles.headerTitle}>
+          {t("customer.appointment.title")}
+        </span>
         <div class={styles.headerSpacer}></div>
         <Button color="flat" onClick={() => setSelectedId(null)}>
           {t("customer.appointment.create")}
@@ -51,6 +53,7 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
                 <th>{t("customer.appointment.duration")}</th>
                 <th>{t("customer.appointment.endTime")}</th>
                 <th>{t("customer.appointment.period")}</th>
+                <th>{t("customer.appointment.price")}</th>
                 <th>{t("customer.appointment.treatment")}</th>
                 <th>{t("customer.appointment.employee")}</th>
               </tr>
@@ -92,6 +95,7 @@ function CustomerAppointmentListEntry(props: {
       <td>{formatMinutes(props.appointment.duration_minutes)}</td>
       <td>{new Date(props.appointment.end_date).toLocaleString()}</td>
       <td>{formatDays(props.appointment.period_days)}</td>
+      <td>{(props.appointment.price / 100).toFixed(2) + " €"}</td>
       <td>{props.appointment.treatment}</td>
       <td>{props.appointment.employee?.name ?? "---"}</td>
     </tr>
