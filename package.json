@@ -16,6 +16,7 @@
     "@solid-primitives/i18n": "^2.2.1",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "~2",
+    "@tauri-apps/plugin-process": "~2.3.1",
     "@tauri-apps/plugin-updater": "~2.9.0",
     "replace-special-characters": "^1.2.7",
     "solid-icons": "^1.1.0",

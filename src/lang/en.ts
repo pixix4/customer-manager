@@ -50,6 +50,13 @@ export const dict = {
     language: "Language",
     fontSize: "Font size",
     openAppDataDirectory: "Open app data directory",
+    update: {
+      noUpdateAvailable: "No update available.",
+      updateAvailable: i18n.template<{ version: string }>(
+        "Update to version {{ id }} is available!",
+      ),
+      installUpdate: "Install update",
+    },
   },
   calendar: {
     weekDays: {

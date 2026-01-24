@@ -1,0 +1,8 @@
+.versions {
+  display: flex;
+  gap: 0.4em;
+
+  span:not(:last-of-type)::after {
+    content: ",";
+  }
+}

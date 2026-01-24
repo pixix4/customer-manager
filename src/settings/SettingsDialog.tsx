@@ -1,35 +1,14 @@
-import { createEffect } from "solid-js";
 import Dialog from "../components/Dialog";
-import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
-import { Locale, usePreferences } from "../preferences";
+import { usePreferences } from "../preferences";
 import styles from "./SettingsDialog.module.css";
-import Button from "../components/Button";
-import { openAppDataDirectory } from "../model";
-import NumberInput from "../components/input/NumberInput";
+import PreferencesPanel from "./PreferencesPanel";
+import VersionPanel from "./VersionPanel";
 
 export default function SettingsDialog(props: {
   show: boolean;
   setShow: (show: boolean) => void;
 }) {
-  const { t, language, setLanguage, fontSize, setFontSize } = usePreferences();
-
-  const languageEntries: SelectBoxPossibleValue[] = [
-    {
-      id: "en",
-      name: "English",
-    },
-    {
-      id: "de",
-      name: "Deutsch",
-    },
-  ];
-
-  createEffect(() => {
-    document.documentElement.style.setProperty(
-      "--font-size",
-      `${fontSize()}px`,
-    );
-  });
+  const { t } = usePreferences();
 
   return (
     <Dialog
@@ -38,24 +17,8 @@ export default function SettingsDialog(props: {
       title={t("settings.title")}
     >
       <div class={styles.content}>
-        <SelectBox
-          label={t("settings.language")}
-          selected={language()}
-          possibleValues={languageEntries}
-          onSelect={(value) => setLanguage(value as Locale)}
-        />
-
-        <NumberInput
-          label={t("settings.fontSize")}
-          value={fontSize()}
-          onChange={setFontSize}
-          min={4}
-          max={64}
-        />
-
-        <Button onClick={openAppDataDirectory}>
-          {t("settings.openAppDataDirectory")}
-        </Button>
+        <PreferencesPanel />
+        <VersionPanel />
       </div>
     </Dialog>
   );
