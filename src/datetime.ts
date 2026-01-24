@@ -14,10 +14,10 @@ function isValidTimeString(time: string): time is TimeString {
 }
 
 function parseDateTimePartsSafe(
-  datetime: string
+  datetime: string,
 ): { date: DateString; hh: string; mm: string; ss: string } | null {
   const m = datetime.match(
-    /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/
+    /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/,
   );
   if (!m) return null;
 
@@ -32,22 +32,19 @@ function parseDateTimePartsSafe(
   };
 }
 
-/** 1) get date string out of datetime */
 export function getDateFromDateTime(datetime: string): DateString | "" {
   const parts = parseDateTimePartsSafe(datetime);
   return parts ? parts.date : "";
 }
 
-/** 2) get time string out of datetime */
 export function getTimeFromDateTime(datetime: string): TimeString | "" {
   const parts = parseDateTimePartsSafe(datetime);
   return parts ? (`${parts.hh}:${parts.mm}` as TimeString) : "";
 }
 
-/** 3) update datetime based on previous value and new date string */
 export function updateDateTimeWithDate(
   prevDateTime: string,
-  newDate: string
+  newDate: string,
 ): DateTimeString | string {
   if (!isValidDateString(newDate)) return prevDateTime;
 
@@ -57,10 +54,9 @@ export function updateDateTimeWithDate(
   return `${newDate}T${parts.hh}:${parts.mm}:${parts.ss}` as DateTimeString;
 }
 
-/** 4) update datetime based on previous value and new time string */
 export function updateDateTimeWithTime(
   prevDateTime: string,
-  newTime: string
+  newTime: string,
 ): DateTimeString | string {
   if (!isValidTimeString(newTime)) return prevDateTime;
 
@@ -71,7 +67,6 @@ export function updateDateTimeWithTime(
   return `${parts.date}T${hh}:${mm}:${parts.ss}` as DateTimeString;
 }
 
-/** Returns the current local datetime as YYYY-MM-DDTHH:mm:ss */
 export function getCurrentDateTime(): DateTimeString {
   const now = new Date();
 
@@ -86,7 +81,18 @@ export function getCurrentDateTime(): DateTimeString {
   return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}` as DateTimeString;
 }
 
-/** Formats a number of minutes into "X h Y min" */
+export function getDateString(
+  year: number,
+  month: number,
+  day: number,
+): DateString {
+  const yyyy = year.toString().padStart(4, "0");
+  const mm = month.toString().padStart(2, "0");
+  const dd = day.toString().padStart(2, "0");
+
+  return `${yyyy}-${mm}-${dd}` as DateString;
+}
+
 export function formatMinutes(totalMinutes: number): string {
   if (!Number.isFinite(totalMinutes) || totalMinutes <= 0) {
     return "0 min";
@@ -106,7 +112,6 @@ export function formatMinutes(totalMinutes: number): string {
     parts.push(`${mins} min`);
   }
 
-  // Handles the case where minutes > 0 but hours === 0
   if (parts.length === 0) {
     return "0 min";
   }
@@ -114,7 +119,6 @@ export function formatMinutes(totalMinutes: number): string {
   return parts.join(" ");
 }
 
-/** Formats a number of days into "X weeks" or "X days" */
 export function formatDays(days: number | null): string {
   if (days === null) {
     return "---";

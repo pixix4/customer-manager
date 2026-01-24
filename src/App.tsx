@@ -12,6 +12,8 @@ import { autofocus } from "@solid-primitives/autofocus";
 import { createCustomerListResource } from "./model";
 import SplitView from "./components/SplitView";
 import CustomerDetails from "./customer/CustomerDetails";
+import DateInput from "./components/input/DateInput";
+import Calendar from "./components/input/Calendar";
 
 export default function App() {
   const t = useTranslation();
@@ -108,6 +110,8 @@ export default function App() {
 }
 
 function WelcomeScreen() {
+  const [data, setData] = createSignal("2026-01-22");
+
   return (
     <div class={styles.welcome}>
       <svg
@@ -226,7 +230,9 @@ function WelcomeScreen() {
         <use href="#cardStack" />
       </svg>
 
-      <div></div>
+      <div>
+        <DateInput label="Test" value={data()} onChange={setData} />
+      </div>
     </div>
   );
 }

@@ -1,0 +1,10 @@
+.date-input {
+  appearance: none;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  padding: 0.8em;
+  margin: 0;
+}

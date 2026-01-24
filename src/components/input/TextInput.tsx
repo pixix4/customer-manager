@@ -4,6 +4,7 @@ import {
   createSignal,
   createUniqueId,
   Index,
+  type JSX,
   Show,
 } from "solid-js";
 import styles from "./TextInput.module.css";
@@ -16,6 +17,8 @@ export default function TextInput(props: {
   onChange: (value: string) => void;
   rows?: number;
   autoComplete?: string[];
+  prefix?: JSX.Element;
+  suffix?: JSX.Element;
 }) {
   const id = createUniqueId();
 
@@ -130,6 +133,8 @@ export default function TextInput(props: {
           </Index>
         </div>
       }
+      prefix={props.prefix}
+      suffix={props.suffix}
     >
       <Show
         when={props.rows && props.rows > 1}
