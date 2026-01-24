@@ -19,7 +19,7 @@ export default function App() {
   const [search, setSearch] = createSignal("");
   const [showEmployeeEditDialog, setShowEmployeeEditDialog] =
     createSignal(false);
-  const [showSettingsDialog, setShowSettingsDialog] = createSignal(true);
+  const [showSettingsDialog, setShowSettingsDialog] = createSignal(false);
 
   const [selectedId, setSelectedId] = createSignal<number | null | undefined>(
     undefined,

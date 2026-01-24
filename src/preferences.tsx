@@ -56,7 +56,7 @@ export const PreferencesContext = createContext<Preferences>();
 
 export function PreferencesContextProvider(props: { children: JSX.Element }) {
   const [language, setLanguage] = createSignal<Locale>("en");
-  const [fontSize, setFontSize] = createSignal(16);
+  const [fontSize, setFontSize] = createSignal(14);
 
   const dict = createMemo(() => i18n.flatten(locales[language()].dict));
   const t = i18n.translator(dict, i18n.resolveTemplate);
@@ -68,6 +68,11 @@ export function PreferencesContextProvider(props: { children: JSX.Element }) {
     });
   });
   createEffect(() => {
+    document.documentElement.style.setProperty(
+      "--font-size",
+      `${fontSize()}px`,
+    );
+
     storePreference({
       key: "fontSize",
       value: fontSize().toString(),

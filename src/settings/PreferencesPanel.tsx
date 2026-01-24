@@ -1,4 +1,3 @@
-import { createEffect } from "solid-js";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
 import { Locale, usePreferences } from "../preferences";
 import Button from "../components/Button";
@@ -18,13 +17,6 @@ export default function PreferencesPanel() {
       name: "Deutsch",
     },
   ];
-
-  createEffect(() => {
-    document.documentElement.style.setProperty(
-      "--font-size",
-      `${fontSize()}px`,
-    );
-  });
 
   return (
     <div>
