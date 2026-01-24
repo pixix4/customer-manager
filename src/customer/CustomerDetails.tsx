@@ -15,6 +15,7 @@ import SimpleInput from "../components/SimpleInput";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
 import SplitView from "../components/SplitView";
 import CustomerAppointmentList from "./CustomerAppointmentList";
+import DateInput from "../components/input/DateInput";
 
 const emptyEditData: EditCustomerDto = {
   id: null,
@@ -165,17 +166,15 @@ export default function CustomerDetails(props: {
               />
             </InputGroup>
             <InputGroup>
-              <SimpleInput
+              <DateInput
                 label={t("customer.birthdate")}
                 value={editData().birthdate ?? ""}
                 onChange={(v) => handleChange("birthdate", v)}
-                type="date"
               />
-              <SimpleInput
+              <DateInput
                 label={t("customer.customerSince")}
                 value={editData().customer_since ?? ""}
                 onChange={(v) => handleChange("customer_since", v)}
-                type="date"
               />
             </InputGroup>
             <InputGroup>

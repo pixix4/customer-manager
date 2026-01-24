@@ -9,11 +9,9 @@ import replaceSpecialCharacters from "replace-special-characters";
 
 function searchEmployee(customer: EmployeeDto, search: string): boolean {
   const values = [customer.name].map((v) =>
-    replaceSpecialCharacters(v).toLowerCase()
+    replaceSpecialCharacters(v).toLowerCase(),
   );
   const searchValues = search.split(" ");
-
-  console.log(values, searchValues);
 
   for (let searchValue of searchValues) {
     let found = false;

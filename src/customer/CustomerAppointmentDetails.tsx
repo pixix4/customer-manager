@@ -21,6 +21,7 @@ import {
   updateDateTimeWithTime,
 } from "../datetime";
 import NumberInput from "../components/input/NumberInput";
+import DateInput from "../components/input/DateInput";
 
 const emptyEditData: EditCustomerAppointmentDto = {
   id: null,
@@ -125,7 +126,6 @@ export default function CustomerAppointmentDetails(props: {
   });
 
   const storeData = async () => {
-    console.log(editData());
     await storeCustomerAppointment(editData());
     props.onUpdate();
     props.setSelectedId(undefined);
@@ -144,11 +144,10 @@ export default function CustomerAppointmentDetails(props: {
   return (
     <div class={styles.appointmentDetails}>
       <InputGroup>
-        <SimpleInput
+        <DateInput
           label={t("customer.appointment.startDate")}
           value={getDateFromDateTime(editData().start_date)}
           onChange={setStartDate}
-          type="date"
         />
         <SimpleInput
           label={t("customer.appointment.startDate")}

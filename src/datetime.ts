@@ -81,11 +81,23 @@ export function getCurrentDateTime(): DateTimeString {
   return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}` as DateTimeString;
 }
 
-export function getDateString(
+export function getDateStringFromDate(date: Date): DateString {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+
+  return `${yyyy}-${mm}-${dd}` as DateString;
+}
+
+export function getDateStringFromValues(
   year: number,
   month: number,
   day: number,
-): DateString {
+): DateString | "" {
+  if (year <= 0 || month <= 0 || day <= 0) {
+    return "";
+  }
+
   const yyyy = year.toString().padStart(4, "0");
   const mm = month.toString().padStart(2, "0");
   const dd = day.toString().padStart(2, "0");

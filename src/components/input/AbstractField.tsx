@@ -10,6 +10,11 @@ export default function AbstractField(props: {
   dropdownVisible?: boolean;
   labelFor?: string;
 }) {
+  const handlePointerDown = (e: PointerEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <div class={styles.abstractField}>
       <div
@@ -29,7 +34,12 @@ export default function AbstractField(props: {
       </div>
 
       <Show when={props.dropdown !== undefined && props.dropdownVisible}>
-        <div class={styles.abstractFieldDropdown}>{props.dropdown}</div>
+        <div
+          class={styles.abstractFieldDropdown}
+          onPointerDown={handlePointerDown}
+        >
+          {props.dropdown}
+        </div>
       </Show>
 
       <label for={props.labelFor} class={styles.abstractFieldLabel}>

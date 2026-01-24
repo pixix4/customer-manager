@@ -4,13 +4,35 @@ import {
 } from "solid-icons/ri";
 import styles from "./Calendar.module.css";
 import { createEffect, createSignal, For } from "solid-js";
-import { getDateString } from "../../datetime";
+import { getDateStringFromValues } from "../../datetime";
 import {
   getTranslatedMonthLongArray,
   getTranslatedWeekDaysShortArray,
   useTranslation,
   WeekDayArray,
 } from "../../preferences";
+
+type DateValue = {
+  year: number;
+  month: number;
+};
+
+function invalidToDefault(value: number, def: number): number {
+  if (isNaN(value) || !isFinite(value)) {
+    return def;
+  }
+
+  return value;
+}
+
+function createDateValue(value: string): DateValue {
+  const now = new Date();
+  const split = value.split("-");
+  return {
+    year: invalidToDefault(parseInt(split[0]), now.getFullYear()),
+    month: invalidToDefault(parseInt(split[1]), now.getMonth() + 1),
+  };
+}
 
 export default function Calendar(props: {
   value: string;
@@ -21,34 +43,30 @@ export default function Calendar(props: {
   const weekDaysShort = getTranslatedWeekDaysShortArray(t);
   const monthsLong = getTranslatedMonthLongArray(t);
 
-  const [selectedYear, setSelectedYear] = createSignal(0);
-  const [selectedMonth, setSelectedMonth] = createSignal(0);
+  const [selectedValue, setSelectedValue] = createSignal(
+    createDateValue(props.value),
+  );
 
   createEffect(() => {
-    const split = props.value.split("-");
-    setSelectedYear(parseInt(split[0]));
-    setSelectedMonth(parseInt(split[1]));
+    setSelectedValue(createDateValue(props.value));
   });
 
-  const monthDetails = () =>
-    getMonthDetails(selectedYear(), selectedMonth(), 1, weekDaysShort);
+  const monthDetails = () => getMonthDetails(selectedValue(), 1, weekDaysShort);
 
-  const showPreviousMonth = (event: MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
+  const showPreviousMonth = () => {
     const details = monthDetails();
-    setSelectedYear(details.previousMonthYear);
-    setSelectedMonth(details.previousMonth);
+    setSelectedValue({
+      year: details.previousMonthYear,
+      month: details.previousMonth,
+    });
   };
 
-  const showNextMonth = (event: MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
+  const showNextMonth = () => {
     const details = monthDetails();
-    setSelectedYear(details.nextMonthYear);
-    setSelectedMonth(details.nextMonth);
+    setSelectedValue({
+      year: details.nextMonthYear,
+      month: details.nextMonth,
+    });
   };
 
   const monthGrid = () => {
@@ -62,23 +80,22 @@ export default function Calendar(props: {
     );
   };
 
-  const selectDay = (event: MouseEvent, details: DayDetails) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    props.onChange(getDateString(details.year, details.month, details.day));
+  const selectDay = (details: DayDetails) => {
+    props.onChange(
+      getDateStringFromValues(details.year, details.month, details.day),
+    );
   };
 
   return (
     <div class={styles.calendar}>
       <div class={styles.header}>
-        <div class={styles.headerAction} onMouseDown={showPreviousMonth}>
+        <div class={styles.headerAction} onClick={showPreviousMonth}>
           <RiArrowsArrowLeftSFill />
         </div>
         <div class={styles.headerCenter}>
-          {monthsLong[selectedMonth() - 1]} {selectedYear()}
+          {monthsLong[selectedValue().month - 1]} {selectedValue().year}
         </div>
-        <div class={styles.headerAction} onMouseDown={showNextMonth}>
+        <div class={styles.headerAction} onClick={showNextMonth}>
           <RiArrowsArrowRightSFill />
         </div>
       </div>
@@ -96,7 +113,7 @@ export default function Calendar(props: {
               <tr>
                 <For each={week}>
                   {(day) => (
-                    <td onMouseDown={(e) => selectDay(e, day)}>
+                    <td onClick={() => selectDay(day)}>
                       <span
                         class={styles.dayView}
                         classList={{
@@ -145,22 +162,21 @@ type DayDetails = {
 type WeeksGrid = DayDetails[][]; // 6 weeks x 7 days
 
 function getMonthDetails(
-  year: number,
-  month: number,
+  value: DateValue,
   firstDayOfWeek: number,
   weekDayArray: WeekDayArray,
 ): MonthDetails {
-  const jsMonth = month - 1;
+  const jsMonth = value.month - 1;
 
   // Month/year neighbors
-  const previousMonth = month === 1 ? 12 : month - 1;
-  const previousMonthYear = month === 1 ? year - 1 : year;
+  const previousMonth = value.month === 1 ? 12 : value.month - 1;
+  const previousMonthYear = value.month === 1 ? value.year - 1 : value.year;
 
-  const nextMonth = month === 12 ? 1 : month + 1;
-  const nextMonthYear = month === 12 ? year + 1 : year;
+  const nextMonth = value.month === 12 ? 1 : value.month + 1;
+  const nextMonthYear = value.month === 12 ? value.year + 1 : value.year;
 
   // Day counts
-  const daysInMonth = new Date(year, jsMonth + 1, 0).getDate();
+  const daysInMonth = new Date(value.year, jsMonth + 1, 0).getDate();
   const daysInPreviousMonth = new Date(
     previousMonthYear,
     previousMonth,
@@ -168,7 +184,7 @@ function getMonthDetails(
   ).getDate(); // note: previousMonth is 1..12
 
   // Weekday of the 1st of the month in JS: 0=Sun..6=Sat
-  const jsWeekdayOfFirst = new Date(year, jsMonth, 1).getDay();
+  const jsWeekdayOfFirst = new Date(value.year, jsMonth, 1).getDay();
 
   // Convert to column index relative to `firstDayOfWeek`
   const columnOfFirstDay = (jsWeekdayOfFirst - firstDayOfWeek + 7) % 7;
@@ -186,8 +202,8 @@ function getMonthDetails(
     daysInPreviousMonth,
     previousMonth,
     previousMonthYear,
-    currentMonth: month,
-    currentMonthYear: year,
+    currentMonth: value.month,
+    currentMonthYear: value.year,
     nextMonth,
     nextMonthYear,
   };

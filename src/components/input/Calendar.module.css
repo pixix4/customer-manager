@@ -54,7 +54,7 @@
       border-radius: 1em;
       width: 2em;
       height: 2em;
-      background-color: var(--background-primary);
+      background-color: var(--background-secondary);
       z-index: -1;
     }
   }

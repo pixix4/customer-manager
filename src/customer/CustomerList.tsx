@@ -14,8 +14,6 @@ function searchCustomer(customer: CustomerDto, search: string): boolean {
   ].map((v) => replaceSpecialCharacters(v).toLowerCase());
   const searchValues = search.split(" ");
 
-  console.log(values, searchValues);
-
   for (let searchValue of searchValues) {
     let found = false;
     for (let value of values) {
