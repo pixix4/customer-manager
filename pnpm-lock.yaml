@@ -20,6 +20,9 @@ importers:
       '@tauri-apps/plugin-opener':
         specifier: ~2
         version: 2.5.3
+      '@tauri-apps/plugin-updater':
+        specifier: ~2.9.0
+        version: 2.9.0
       replace-special-characters:
         specifier: ^1.2.7
         version: 1.2.7
@@ -514,6 +517,9 @@ packages:
 
   '@tauri-apps/plugin-opener@2.5.3':
     resolution: {integrity: sha512-CCcUltXMOfUEArbf3db3kCE7Ggy1ExBEBl51Ko2ODJ6GDYHRp1nSNlQm5uNCFY5k7/ufaK5Ib3Du/Zir19IYQQ==}
+
+  '@tauri-apps/plugin-updater@2.9.0':
+    resolution: {integrity: sha512-j++sgY8XpeDvzImTrzWA08OqqGqgkNyxczLD7FjNJJx/uXxMZFz5nDcfkyoI/rCjYuj2101Tci/r/HFmOmoxCg==}
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -1120,6 +1126,10 @@ snapshots:
       '@tauri-apps/cli-win32-x64-msvc': 2.9.6
 
   '@tauri-apps/plugin-opener@2.5.3':
+    dependencies:
+      '@tauri-apps/api': 2.9.1
+
+  '@tauri-apps/plugin-updater@2.9.0':
     dependencies:
       '@tauri-apps/api': 2.9.1
 

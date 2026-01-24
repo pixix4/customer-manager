@@ -25,6 +25,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -32,5 +33,13 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDU5MUFDMDBDNTlGQjcyREQKUldUZGN2dFpETUFhV1YvOTZRb3htRUJ4THpjaWhJQ1lNb2xMWlRRSDNrTExDRk04NDd4QXBITDkK",
+      "endpoints": [
+        "https://github.com/pixix4/customer-manager/releases/latest/download/latest.json"
+      ]
+    }
   }
 }
