@@ -5,11 +5,13 @@ import {
 } from "@tauri-apps/api/app";
 import { check, Update } from "@tauri-apps/plugin-updater";
 
-import { createResource, Show } from "solid-js";
+import { createResource, Match, Switch } from "solid-js";
 import styles from "./VersionPanel.module.css";
 import Button from "../components/Button";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { usePreferences } from "../preferences";
+import { RiSystemCheckLine, RiSystemErrorWarningLine } from "solid-icons/ri";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 type AppInfo = {
   version: string;
@@ -41,32 +43,16 @@ export default function VersionPanel() {
   const [appInfo] = createResource(getAppInfo);
   const [updateInfo] = createResource(getUpdateInfo);
 
-  return (
-    <div>
-      <div class={styles.versions}>
-        <span>Version: {appInfo()?.version ?? "-"}</span>
-        <span>Tauri-Version: {appInfo()?.tauriVersion ?? "-"}</span>
-        <span>Bundle-Type: {appInfo()?.bundleType ?? "-"}</span>
-      </div>
-
-      <Show
-        when={updateInfo()?.update}
-        fallback={<div>{t("settings.update.noUpdateAvailable")}</div>}
-      >
-        <UpdateView update={updateInfo()?.update!!} />
-      </Show>
-    </div>
-  );
-}
-
-function UpdateView(props: { update: Update }) {
-  const { t } = usePreferences();
-
   const handleOnUpdate = async () => {
     let downloaded = 0;
     let contentLength = 0;
 
-    await props.update.downloadAndInstall((event) => {
+    const update = updateInfo()?.update;
+    if (!update) {
+      return;
+    }
+
+    await update.downloadAndInstall((event) => {
       switch (event.event) {
         case "Started":
           contentLength = event.data.contentLength ?? 0;
@@ -88,14 +74,41 @@ function UpdateView(props: { update: Update }) {
 
   return (
     <div>
-      <div>
-        {t("settings.update.updateAvailable", {
-          version: props.update.version,
-        })}
+      <Switch>
+        <Match when={!updateInfo()}>
+          <div class={styles.updateInfo} data-type="loading">
+            <LoadingSpinner size={2} />
+            <span>{t("settings.update.loading")}</span>
+          </div>
+        </Match>
+
+        <Match when={!updateInfo()?.update}>
+          <div class={styles.updateInfo} data-type="up-to-date">
+            <RiSystemCheckLine />
+            <span>{t("settings.update.noUpdateAvailable")}</span>
+          </div>
+        </Match>
+
+        <Match when={updateInfo()?.update}>
+          <div class={styles.updateInfo} data-type="available">
+            <RiSystemErrorWarningLine />
+            <span>
+              {t("settings.update.updateAvailable", {
+                version: updateInfo()?.update?.version ?? "-",
+              })}
+            </span>
+            <Button color="primary" onClick={handleOnUpdate}>
+              {t("settings.update.installUpdate")}
+            </Button>
+          </div>
+        </Match>
+      </Switch>
+
+      <div class={styles.versions}>
+        <span>Version: {appInfo()?.version ?? "-"}</span>
+        <span>Tauri-Version: {appInfo()?.tauriVersion ?? "-"}</span>
+        <span>Bundle-Type: {appInfo()?.bundleType ?? "-"}</span>
       </div>
-      <Button onClick={handleOnUpdate}>
-        {t("settings.update.installUpdate")}
-      </Button>
     </div>
   );
 }

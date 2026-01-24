@@ -51,9 +51,10 @@ export const dict: RawDictionary = {
     fontSize: "Schriftgröße",
     openAppDataDirectory: "App-Ordner öffnen",
     update: {
+      loading: "Updates werden gesucht...",
       noUpdateAvailable: "Kein Update verfügbar.",
       updateAvailable: i18n.template<{ version: string }>(
-        "Update auf Version {{ id }} verfügbar!",
+        "Update auf Version {{ version }} verfügbar!",
       ),
       installUpdate: "Update installieren",
     },

@@ -1,8 +1,30 @@
 .versions {
   display: flex;
   gap: 0.4em;
+  color: var(--text-secondary);
+  padding: 0.2em;
 
   span:not(:last-of-type)::after {
     content: ",";
+  }
+}
+
+.update-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  height: 3.6em;
+
+  svg {
+    width: 2em;
+    height: 2em;
+  }
+
+  &[data-type="up-to-date"] svg {
+    color: var(--theme-primary);
+  }
+
+  &[data-type="available"] svg {
+    color: var(--danger-color);
   }
 }

@@ -51,9 +51,10 @@ export const dict = {
     fontSize: "Font size",
     openAppDataDirectory: "Open app data directory",
     update: {
+      loading: "Seaching for updates...",
       noUpdateAvailable: "No update available.",
       updateAvailable: i18n.template<{ version: string }>(
-        "Update to version {{ id }} is available!",
+        "Update to version {{ version }} is available!",
       ),
       installUpdate: "Install update",
     },
