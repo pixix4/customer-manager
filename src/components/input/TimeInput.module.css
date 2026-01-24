@@ -1,0 +1,17 @@
+.time-input {
+  padding: 0.7em;
+
+  &:focus .time-entry.active {
+    background-color: var(--theme-primary);
+    color: var(--theme-text);
+  }
+}
+
+.time-entry {
+  padding: 0.1em;
+  border-radius: 0.2em;
+
+  &.inactive {
+    color: var(--text-secondary);
+  }
+}

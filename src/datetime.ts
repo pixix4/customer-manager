@@ -105,6 +105,16 @@ export function getDateStringFromValues(
   return `${yyyy}-${mm}-${dd}` as DateString;
 }
 
+export function getTimeStringFromValues(
+  hour: number,
+  minute: number,
+): TimeString {
+  const hh = String(hour).padStart(2, "0");
+  const min = String(minute).padStart(2, "0");
+
+  return `${hh}:${min}` as TimeString;
+}
+
 export function formatMinutes(totalMinutes: number): string {
   if (!Number.isFinite(totalMinutes) || totalMinutes <= 0) {
     return "0 min";

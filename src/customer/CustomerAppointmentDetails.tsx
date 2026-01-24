@@ -11,7 +11,6 @@ import {
 } from "../model";
 import { useTranslation } from "../preferences";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
-import SimpleInput from "../components/SimpleInput";
 import InputGroup from "../components/InputGroup";
 import {
   getCurrentDateTime,
@@ -22,6 +21,7 @@ import {
 } from "../datetime";
 import NumberInput from "../components/input/NumberInput";
 import DateInput from "../components/input/DateInput";
+import TimeInput from "../components/input/TimeInput";
 
 const emptyEditData: EditCustomerAppointmentDto = {
   id: null,
@@ -149,11 +149,10 @@ export default function CustomerAppointmentDetails(props: {
           value={getDateFromDateTime(editData().start_date)}
           onChange={setStartDate}
         />
-        <SimpleInput
+        <TimeInput
           label={t("customer.appointment.startDate")}
           value={getTimeFromDateTime(editData().start_date)}
           onChange={setStartTime}
-          type="time"
         />
       </InputGroup>
       <InputGroup>

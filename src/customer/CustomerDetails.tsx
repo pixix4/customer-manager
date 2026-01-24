@@ -11,7 +11,6 @@ import {
 } from "../model";
 import { useTranslation } from "../preferences";
 import InputGroup from "../components/InputGroup";
-import SimpleInput from "../components/SimpleInput";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
 import SplitView from "../components/SplitView";
 import CustomerAppointmentList from "./CustomerAppointmentList";
