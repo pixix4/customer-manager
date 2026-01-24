@@ -39,7 +39,7 @@
   width: 2em;
   height: 2em;
   line-height: 2em;
-  display: block;
+  display: inline-block;
   z-index: 0;
 
   &.active {
