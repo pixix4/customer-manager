@@ -1,5 +1,5 @@
 import * as i18n from "@solid-primitives/i18n";
-import { RawDictionary } from "../preferences";
+import { RawDictionary } from "../translation";
 
 export const dict: RawDictionary = {
   general: {

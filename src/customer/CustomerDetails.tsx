@@ -9,7 +9,7 @@ import {
   getEmployeeList,
   storeCustomer,
 } from "../model";
-import { useTranslation } from "../preferences";
+import { useTranslation } from "../translation";
 import InputGroup from "../components/InputGroup";
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
 import SplitView from "../components/SplitView";
@@ -53,7 +53,7 @@ export default function CustomerDetails(props: {
   setSelectedId: (id: number | undefined) => void;
   onUpdate: () => void;
 }) {
-  const t = useTranslation();
+  const { t } = useTranslation();
 
   const [customer] = createCustomerByIdResource(() => props.selectedId);
   const [employeeEntries] = createResource(getEmployeeEntries);

@@ -43,6 +43,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  user-select: none;
+  -webkit-user-select: none;
+  
+  cursor: pointer;
 }
 
 .title-bar-button:hover {
@@ -87,23 +92,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.error-box {
-  position: relative;
-  width: 100%;
-  height: 100%;
-
-  color: var(--danger-color);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1em;
-}
-
-.error-box svg {
-  font-size: 4em;
 }
 
 .search-input {

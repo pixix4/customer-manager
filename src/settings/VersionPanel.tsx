@@ -9,7 +9,7 @@ import { createResource, Match, Switch } from "solid-js";
 import styles from "./VersionPanel.module.css";
 import Button from "../components/Button";
 import { relaunch } from "@tauri-apps/plugin-process";
-import { usePreferences } from "../preferences";
+import { useTranslation } from "../translation";
 import { RiSystemCheckLine, RiSystemErrorWarningLine } from "solid-icons/ri";
 import LoadingSpinner from "../components/LoadingSpinner";
 
@@ -38,7 +38,7 @@ async function getUpdateInfo(): Promise<UpdateInfo> {
 }
 
 export default function VersionPanel() {
-  const { t } = usePreferences();
+  const { t } = useTranslation();
 
   const [appInfo] = createResource(getAppInfo);
   const [updateInfo] = createResource(getUpdateInfo);

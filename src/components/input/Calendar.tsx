@@ -10,7 +10,7 @@ import {
   getTranslatedWeekDaysShortArray,
   useTranslation,
   WeekDayArray,
-} from "../../preferences";
+} from "../../translation";
 
 type DateValue = {
   year: number;
@@ -38,7 +38,7 @@ export default function Calendar(props: {
   value: string;
   onChange: (value: string) => void;
 }) {
-  const t = useTranslation();
+  const { t } = useTranslation();
 
   const weekDaysShort = getTranslatedWeekDaysShortArray(t);
   const monthsLong = getTranslatedMonthLongArray(t);

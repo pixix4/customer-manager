@@ -2,13 +2,13 @@
 import { render } from "solid-js/web";
 import App from "./App";
 import "./index.css";
-import { PreferencesContextProvider } from "./preferences";
+import { TranslationContextProvider } from "./translation";
 
 render(
   () => (
-    <PreferencesContextProvider>
+    <TranslationContextProvider>
       <App />
-    </PreferencesContextProvider>
+    </TranslationContextProvider>
   ),
-  document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );

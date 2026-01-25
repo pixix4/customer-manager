@@ -1,6 +1,6 @@
 import Dialog from "../components/Dialog";
 import CustomerAppointmentDetails from "./CustomerAppointmentDetails";
-import { useTranslation } from "../preferences";
+import { useTranslation } from "../translation";
 
 export default function CustomerAppointmentEditDialog(props: {
   customerId: number;
@@ -8,7 +8,7 @@ export default function CustomerAppointmentEditDialog(props: {
   setSelectedId: (id: number | null | undefined) => void;
   onUpdate: () => void;
 }) {
-  const t = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Dialog

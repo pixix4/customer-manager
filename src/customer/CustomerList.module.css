@@ -23,7 +23,7 @@
   padding: 0.3em 0.8em;
   background: var(--background-secondary);
   z-index: 2;
-  cursor: default;
+  cursor: pointer;
 }
 .customer-list-entry.selected {
   font-weight: bold;

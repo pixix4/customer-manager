@@ -1,20 +1,21 @@
-import { createSignal, Match, Switch } from "solid-js";
+import { createEffect, createSignal, Match, Switch } from "solid-js";
 import styles from "./App.module.css";
 import EmployeeEditDialog from "./employee/EmployeeEditDialog";
 import {
   RiSystemSettings4Fill,
   RiUserFacesAccountCircleFill,
 } from "solid-icons/ri";
-import { useTranslation } from "./preferences";
+import { useTranslation } from "./translation";
 import SettingsDialog from "./settings/SettingsDialog";
 import CustomerList from "./customer/CustomerList";
 import { autofocus } from "@solid-primitives/autofocus";
 import { createCustomerListResource } from "./model";
 import SplitView from "./components/SplitView";
 import CustomerDetails from "./customer/CustomerDetails";
+import { appConfig } from "./appConfig";
 
 export default function App() {
-  const t = useTranslation();
+  const { t } = useTranslation();
 
   const [search, setSearch] = createSignal("");
   const [showEmployeeEditDialog, setShowEmployeeEditDialog] =
@@ -25,6 +26,15 @@ export default function App() {
     undefined,
   );
   const [customers, { refetch }] = createCustomerListResource();
+
+  const fontSize = () => appConfig("general.font-size");
+
+  createEffect(() => {
+    document.documentElement.style.setProperty(
+      "--font-size",
+      `${fontSize()}px`,
+    );
+  });
 
   return (
     <>

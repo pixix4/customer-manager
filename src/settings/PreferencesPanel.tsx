@@ -1,11 +1,15 @@
 import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
-import { Locale, usePreferences } from "../preferences";
+import { useTranslation } from "../translation";
 import Button from "../components/Button";
 import { openAppDataDirectory } from "../model";
 import NumberInput from "../components/input/NumberInput";
+import { appConfig, Locale, setAppConfig } from "../appConfig";
 
 export default function PreferencesPanel() {
-  const { t, language, setLanguage, fontSize, setFontSize } = usePreferences();
+  const { t } = useTranslation();
+
+  const language = () => appConfig("general.language");
+  const fontSize = () => appConfig("general.font-size");
 
   const languageEntries: SelectBoxPossibleValue[] = [
     {
@@ -24,13 +28,13 @@ export default function PreferencesPanel() {
         label={t("settings.language")}
         selected={language()}
         possibleValues={languageEntries}
-        onSelect={(value) => setLanguage(value as Locale)}
+        onSelect={(value) => setAppConfig("general.language", value as Locale)}
       />
 
       <NumberInput
         label={t("settings.fontSize")}
         value={fontSize()}
-        onChange={setFontSize}
+        onChange={(v) => setAppConfig("general.font-size", v)}
         min={4}
         max={64}
       />

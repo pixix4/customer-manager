@@ -4,16 +4,16 @@ import SplitView from "../components/SplitView";
 import EmployeeList from "./EmployeeList";
 import EmployeeDetails from "./EmployeeDetails";
 import { createEmployeeListResource } from "../model";
-import { useTranslation } from "../preferences";
+import { useTranslation } from "../translation";
 
 export default function EmployeeEditDialog(props: {
   show: boolean;
   setShow: (show: boolean) => void;
 }) {
-  const t = useTranslation();
+  const { t } = useTranslation();
 
   const [selectedId, setSelectedId] = createSignal<number | null | undefined>(
-    undefined
+    undefined,
   );
 
   const [employees, { refetch }] = createEmployeeListResource();
