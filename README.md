@@ -1,7 +1,15 @@
-# Tauri + Solid + Typescript
+# customer-manager
 
-This template should help get you started developing with Tauri, Solid and Typescript in Vite.
+![customer-manager](./app-icon.svg?raw=true "customer-manager")
 
-## Recommended IDE Setup
+A simple customer management utility. It stores a searchable collection of customers, who can be assigned to a primarily responsible employee. Additionally each customer has a collection of past appointments to see the history of this customer.
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+![Overview](./screenshots/overview.png?raw=true "Overview")
+
+### Development
+
+```bash
+pnpm tauri dev
+# or
+pnpm tauri build
+```

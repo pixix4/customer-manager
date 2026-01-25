@@ -31,6 +31,20 @@ function searchCustomer(customer: CustomerDto, search: string): boolean {
   return true;
 }
 
+function compareCustomer(a: CustomerDto, b: CustomerDto): number {
+  const last_name = a.last_name.localeCompare(b.last_name);
+  if (last_name !== 0) {
+    return last_name;
+  }
+
+  const first_name = a.first_name.localeCompare(b.first_name);
+  if (first_name !== 0) {
+    return first_name;
+  }
+
+  return 0;
+}
+
 export default function CustomerList(props: {
   customers: Resource<CustomerDto[]>;
   selectedId: number | null | undefined;
@@ -41,10 +55,15 @@ export default function CustomerList(props: {
     const unfiltered = props.customers() ?? [];
     const search = replaceSpecialCharacters(props.search).toLowerCase();
     if (search === "") {
+      unfiltered.sort(compareCustomer);
       return unfiltered;
     }
 
-    return unfiltered.filter((customer) => searchCustomer(customer, search));
+    const filtered = unfiltered.filter((customer) =>
+      searchCustomer(customer, search),
+    );
+    filtered.sort(compareCustomer);
+    return filtered;
   };
 
   return (
@@ -73,7 +92,7 @@ export default function CustomerList(props: {
                       }}
                       onClick={() => props.setSelectedId(customer.id)}
                     >
-                      {customer.first_name + " " + customer.last_name}
+                      {customer.last_name + ", " + customer.first_name}
                     </div>
                   );
                 }}

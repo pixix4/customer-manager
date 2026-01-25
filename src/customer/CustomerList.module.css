@@ -9,6 +9,7 @@
 .customer-list-content {
   grid-area: list;
   position: relative;
+  height: 100%;
 
   overflow: auto;
   padding: 0.5em 0;
@@ -19,7 +20,6 @@
 
 .customer-list-entry {
   top: -0.5em;
-  position: sticky;
   padding: 0.3em 0.8em;
   background: var(--background-secondary);
   z-index: 2;
