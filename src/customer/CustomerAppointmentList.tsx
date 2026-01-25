@@ -10,6 +10,16 @@ import CustomerAppointmentEditDialog from "./CustomerAppointmentEditDialog";
 import { useTranslation } from "../translation";
 import { formatDays, formatMinutes } from "../datetime";
 import Button from "../components/Button";
+import { appConfig } from "../appConfig";
+
+const options: Intl.DateTimeFormatOptions = {
+  weekday: "short",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+};
 
 export default function CustomerAppointmentList(props: { customerId: number }) {
   const { t } = useTranslation();
@@ -21,6 +31,9 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
   const [selectedId, setSelectedId] = createSignal<number | null | undefined>(
     undefined,
   );
+
+  const formatter = () =>
+    new Intl.DateTimeFormat(appConfig("general.language"), options);
 
   return (
     <div class={styles.appointments}>
@@ -65,6 +78,7 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
                     <CustomerAppointmentListEntry
                       appointment={appointment}
                       setSelectedId={setSelectedId}
+                      formatter={formatter()}
                     />
                   );
                 }}
@@ -87,13 +101,14 @@ export default function CustomerAppointmentList(props: { customerId: number }) {
 function CustomerAppointmentListEntry(props: {
   appointment: CustomerAppointmentDto;
   setSelectedId: (id: number) => void;
+  formatter: Intl.DateTimeFormat;
 }) {
   return (
     <tr onClick={() => props.setSelectedId(props.appointment.id)}>
       <td>{props.appointment.number}</td>
-      <td>{new Date(props.appointment.start_date).toLocaleString()}</td>
+      <td>{props.formatter.format(new Date(props.appointment.start_date))}</td>
       <td>{formatMinutes(props.appointment.duration_minutes)}</td>
-      <td>{new Date(props.appointment.end_date).toLocaleString()}</td>
+      <td>{props.formatter.format(new Date(props.appointment.end_date))}</td>
       <td>{formatDays(props.appointment.period_days)}</td>
       <td>{(props.appointment.price / 100).toFixed(2) + " €"}</td>
       <td>{props.appointment.treatment}</td>
