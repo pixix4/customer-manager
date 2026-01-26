@@ -279,7 +279,7 @@ function TimeEntry(props: {
   inputProgress: number;
 }) {
   const displayValue = () => {
-    if (props.value <= 0 && (props.inputProgress === 0 || !props.active)) {
+    if (props.value < 0 && (props.inputProgress === 0 || !props.active)) {
       return props.placeholder.repeat(props.digits);
     }
 
@@ -291,7 +291,7 @@ function TimeEntry(props: {
       class={styles.timeEntry}
       classList={{
         [styles.active]: props.active,
-        [styles.inactive]: props.value <= 0,
+        [styles.inactive]: props.value < 0,
       }}
       onClick={props.onClick}
     >

@@ -163,18 +163,14 @@ export default function NumberInput(props: {
         />
         <div class={styles.numberActions}>
           <div
-            onMouseDown={(e) => {
-              e.preventDefault();
-              onIncrement(props.increment ?? 1);
-            }}
+            onPointerDown={(e) => e.preventDefault()}
+            onClick={() => onIncrement(props.increment ?? 1)}
           >
             <RiArrowsArrowUpSFill />
           </div>
           <div
-            onMouseDown={(e) => {
-              e.preventDefault();
-              onDecrement(props.increment ?? 1);
-            }}
+            onPointerDown={(e) => e.preventDefault()}
+            onClick={() => onDecrement(props.increment ?? 1)}
           >
             <RiArrowsArrowDownSFill />
           </div>

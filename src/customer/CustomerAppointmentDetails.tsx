@@ -150,7 +150,7 @@ export default function CustomerAppointmentDetails(props: {
           onChange={setStartDate}
         />
         <TimeInput
-          label={t("customer.appointment.startDate")}
+          label={t("customer.appointment.startTime")}
           value={getTimeFromDateTime(editData().start_date)}
           onChange={setStartTime}
         />
