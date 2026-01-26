@@ -4,6 +4,7 @@ import styles from "./CustomerAppointmentDetails.module.css";
 import Button from "../components/Button";
 import {
   createCustomerAppointmentByIdResource,
+  createCustomerByIdResource,
   deleteCustomerAppointment,
   EditCustomerAppointmentDto,
   getEmployeeList,
@@ -58,6 +59,7 @@ export default function CustomerAppointmentDetails(props: {
 }) {
   const { t } = useTranslation();
 
+  const [customer] = createCustomerByIdResource(() => props.customerId);
   const [appointment] = createCustomerAppointmentByIdResource(
     () => props.selectedId,
   );
@@ -66,6 +68,16 @@ export default function CustomerAppointmentDetails(props: {
   const [editData, setEditData] = createSignal<EditCustomerAppointmentDto>({
     ...emptyEditData,
   });
+
+  createEffect(() => {
+    if (props.selectedId === null && customer()) {
+      setEditData((data) => ({
+        ...data,
+        employee_id: customer()?.responsible_employee?.id ?? null,
+      }));
+    }
+  });
+
   const handleChange = <K extends keyof EditCustomerAppointmentDto>(
     key: K,
     value: EditCustomerAppointmentDto[K],
