@@ -15,6 +15,7 @@ import SelectBox, { SelectBoxPossibleValue } from "../components/SelectBox";
 import SplitView from "../components/SplitView";
 import CustomerAppointmentList from "./CustomerAppointmentList";
 import DateInput from "../components/input/DateInput";
+import MessageBox from "../components/MessageBox";
 
 const emptyEditData: EditCustomerDto = {
   id: null,
@@ -71,6 +72,7 @@ export default function CustomerDetails(props: {
 }) {
   const { t } = useTranslation();
 
+  const [deleteMessageBox, setDeleteMessageBox] = createSignal(false);
   const [customer] = createCustomerByIdResource(() => props.selectedId);
   const [employeeEntries] = createResource(getEmployeeEntries);
 
@@ -240,10 +242,10 @@ export default function CustomerDetails(props: {
       />
 
       <div class={styles.actionRow}>
-        <Button color="danger" onClick={deleteData}>
-          {t("general.delete")}
-        </Button>
         <Show when={props.selectedId !== null}>
+          <Button color="danger" onClick={() => setDeleteMessageBox(true)}>
+            {t("general.delete")}
+          </Button>
           <div class={styles.idHint}>
             {t("customer.idHint", { id: props.selectedId ?? -1 })}
           </div>
@@ -260,6 +262,27 @@ export default function CustomerDetails(props: {
       <Show when={props.selectedId !== null}>
         <CustomerAppointmentList customerId={props.selectedId ?? 0} />
       </Show>
+
+      <MessageBox
+        show={deleteMessageBox()}
+        setShow={setDeleteMessageBox}
+        title={t("customer.delete")}
+        actions={[
+          {
+            label: t("general.delete"),
+            onAction: deleteData,
+            color: "danger",
+          },
+          {
+            label: t("general.cancel"),
+            onAction: () => {},
+          },
+        ]}
+      >
+        <span>
+          {t("customer.deleteMessage", { id: props.selectedId ?? -1 })}
+        </span>
+      </MessageBox>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import {
   storeEmployee,
 } from "../model";
 import { useTranslation } from "../translation";
+import MessageBox from "../components/MessageBox";
 
 const emptyEditData: EditEmployeeDto = {
   id: null,
@@ -28,6 +29,7 @@ export default function EmployeeDetails(props: {
 }) {
   const { t } = useTranslation();
 
+  const [deleteMessageBox, setDeleteMessageBox] = createSignal(false);
   const [employee] = createEmployeeByIdResource(() => props.selectedId);
 
   const [editData, setEditData] = createSignal<EditEmployeeDto>({
@@ -101,10 +103,10 @@ export default function EmployeeDetails(props: {
       />
 
       <div class={styles.actionRow}>
-        <Button color="danger" onClick={deleteData}>
-          {t("general.delete")}
-        </Button>
         <Show when={props.selectedId !== null}>
+          <Button color="danger" onClick={() => setDeleteMessageBox(true)}>
+            {t("general.delete")}
+          </Button>
           <div class={styles.idHint}>
             {t("employee.idHint", { id: props.selectedId ?? -1 })}
           </div>
@@ -117,6 +119,27 @@ export default function EmployeeDetails(props: {
           {t("general.save")}
         </Button>
       </div>
+
+      <MessageBox
+        show={deleteMessageBox()}
+        setShow={setDeleteMessageBox}
+        title={t("employee.delete")}
+        actions={[
+          {
+            label: t("general.delete"),
+            onAction: deleteData,
+            color: "danger",
+          },
+          {
+            label: t("general.cancel"),
+            onAction: () => {},
+          },
+        ]}
+      >
+        <span>
+          {t("employee.deleteMessage", { id: props.selectedId ?? -1 })}
+        </span>
+      </MessageBox>
     </div>
   );
 }

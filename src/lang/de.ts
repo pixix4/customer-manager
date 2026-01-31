@@ -11,11 +11,19 @@ export const dict: RawDictionary = {
   employee: {
     dialogTitle: "Mitarbeiterverwaltung",
     create: "Mitarbeiter erstellen",
+    delete: "Mitarbeiter löschen",
+    deleteMessage: i18n.template<{ id: number }>(
+      "Möchten Sie den Mitarbeiter {{ id }} löschen? Dies kann nicht rückgängig gemacht werden.",
+    ),
     idHint: i18n.template<{ id: number }>("Mitarbeiter-ID: {{ id }}"),
     name: "Name",
   },
   customer: {
     create: "Kunde erstellen",
+    delete: "Kunde löschen",
+    deleteMessage: i18n.template<{ id: number }>(
+      "Möchten Sie den Kunden {{ id }} löschen? Dies kann nicht rückgängig gemacht werden.",
+    ),
     idHint: i18n.template<{ id: number }>("Kunden-ID: {{ id }}"),
     title: "Anrede",
     firstName: "Vorname",
@@ -32,6 +40,10 @@ export const dict: RawDictionary = {
       title: "Termine",
       dialogTitle: "Terminverwaltung",
       create: "Termin erstellen",
+      delete: "Termin löschen",
+      deleteMessage: i18n.template<{ id: number }>(
+        "Möchten Sie den Termin {{ id }} löschen? Dies kann nicht rückgängig gemacht werden.",
+      ),
       idHint: i18n.template<{ id: number }>("Termin-ID: {{ id }}"),
       number: "Nr.",
       startDateTime: "Termin am",

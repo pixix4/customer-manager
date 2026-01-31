@@ -1,5 +1,4 @@
 import * as i18n from "@solid-primitives/i18n";
-import { openAppDataDirectory } from "../model";
 
 export const dict = {
   general: {
@@ -11,11 +10,19 @@ export const dict = {
   employee: {
     dialogTitle: "Employee management",
     create: "Create employee",
+    delete: "Delete employee",
+    deleteMessage: i18n.template<{ id: number }>(
+      "Do you want to delete employee {{ id }}? This cannot be undone.",
+    ),
     idHint: i18n.template<{ id: number }>("Employee ID: {{ id }}"),
     name: "Name",
   },
   customer: {
     create: "Create customer",
+    delete: "Delete customer",
+    deleteMessage: i18n.template<{ id: number }>(
+      "Do you want to delete customer {{ id }}? This cannot be undone.",
+    ),
     idHint: i18n.template<{ id: number }>("Customer ID: {{ id }}"),
     title: "Title",
     firstName: "First name",
@@ -32,6 +39,10 @@ export const dict = {
       title: "Appointments",
       dialogTitle: "Appointment management",
       create: "Create appointment",
+      delete: "Delete appointment",
+      deleteMessage: i18n.template<{ id: number }>(
+        "Do you want to delete appointment {{ id }}? This cannot be undone.",
+      ),
       idHint: i18n.template<{ id: number }>("Appointment ID: {{ id }}"),
       number: "Nr.",
       startDateTime: "Appointment at",

@@ -23,6 +23,7 @@ import {
 import NumberInput from "../components/input/NumberInput";
 import DateInput from "../components/input/DateInput";
 import TimeInput from "../components/input/TimeInput";
+import MessageBox from "../components/MessageBox";
 
 const emptyEditData: EditCustomerAppointmentDto = {
   id: null,
@@ -73,6 +74,7 @@ export default function CustomerAppointmentDetails(props: {
 }) {
   const { t } = useTranslation();
 
+  const [deleteMessageBox, setDeleteMessageBox] = createSignal(false);
   const [customer] = createCustomerByIdResource(() => props.customerId);
   const [appointment] = createCustomerAppointmentByIdResource(
     () => props.selectedId,
@@ -230,10 +232,10 @@ export default function CustomerAppointmentDetails(props: {
       </InputGroup>
 
       <div class={styles.actionRow}>
-        <Button color="danger" onClick={deleteData}>
-          {t("general.delete")}
-        </Button>
         <Show when={props.selectedId !== null}>
+          <Button color="danger" onClick={() => setDeleteMessageBox(true)}>
+            {t("general.delete")}
+          </Button>
           <div class={styles.idHint}>
             {t("customer.appointment.idHint", { id: props.selectedId ?? -1 })}
           </div>
@@ -246,6 +248,29 @@ export default function CustomerAppointmentDetails(props: {
           {t("general.save")}
         </Button>
       </div>
+
+      <MessageBox
+        show={deleteMessageBox()}
+        setShow={setDeleteMessageBox}
+        title={t("customer.appointment.delete")}
+        actions={[
+          {
+            label: t("general.delete"),
+            onAction: deleteData,
+            color: "danger",
+          },
+          {
+            label: t("general.cancel"),
+            onAction: () => {},
+          },
+        ]}
+      >
+        <span>
+          {t("customer.appointment.deleteMessage", {
+            id: props.selectedId ?? -1,
+          })}
+        </span>
+      </MessageBox>
     </div>
   );
 }

@@ -1,9 +1,11 @@
 import { JSX } from "solid-js";
 import styles from "./Button.module.css";
 
+export type ButtonColor = "default" | "primary" | "danger" | "flat";
+
 export default function Button(props: {
   onClick?: () => void;
-  color?: "default" | "primary" | "danger" | "flat";
+  color?: ButtonColor;
   disabled?: boolean;
   children: JSX.Element;
 }) {
