@@ -15,6 +15,12 @@ const emptyEditData: EditEmployeeDto = {
   name: "",
 };
 
+function areEqual(a: EditEmployeeDto, b: EditEmployeeDto): boolean {
+  if (a.name !== b.name) return false;
+
+  return true;
+}
+
 export default function EmployeeDetails(props: {
   selectedId: number | null;
   setSelectedId: (id: number | undefined) => void;
@@ -27,16 +33,19 @@ export default function EmployeeDetails(props: {
   const [editData, setEditData] = createSignal<EditEmployeeDto>({
     ...emptyEditData,
   });
-  const handleChange = <K extends keyof EditEmployeeDto>(
-    key: K,
-    value: EditEmployeeDto[K],
-  ) => {
-    setEditData((prev) => ({ ...prev, [key]: value }));
-  };
+  const [baseData, setBaseData] = createSignal<EditEmployeeDto>({
+    ...emptyEditData,
+  });
+
+  const hasChanges = () => !areEqual(editData(), baseData());
 
   createEffect(async () => {
     if (props.selectedId === null || props.selectedId === undefined) {
-      setEditData({ ...emptyEditData });
+      const obj = { ...emptyEditData };
+
+      setEditData(obj);
+      setBaseData(obj);
+
       return;
     }
 
@@ -46,14 +55,26 @@ export default function EmployeeDetails(props: {
 
     const data = employee();
     if (data) {
-      setEditData({
+      const obj = {
         id: data.id,
         name: data.name,
-      });
+      };
+
+      setEditData(obj);
+      setBaseData(obj);
     } else {
-      setEditData({ ...emptyEditData });
+      const obj = { ...emptyEditData };
+
+      setEditData(obj);
+      setBaseData(obj);
     }
   });
+  const handleChange = <K extends keyof EditEmployeeDto>(
+    key: K,
+    value: EditEmployeeDto[K],
+  ) => {
+    setEditData((prev) => ({ ...prev, [key]: value }));
+  };
 
   const storeData = async () => {
     const id = await storeEmployee(editData());
@@ -92,7 +113,7 @@ export default function EmployeeDetails(props: {
         <Button onClick={() => props.setSelectedId(undefined)}>
           {t("general.cancel")}
         </Button>
-        <Button color="primary" onClick={storeData}>
+        <Button color="primary" onClick={storeData} disabled={!hasChanges()}>
           {t("general.save")}
         </Button>
       </div>

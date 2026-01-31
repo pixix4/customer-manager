@@ -48,6 +48,22 @@ async function getEmployeeEntries(): Promise<SelectBoxPossibleValue[]> {
   return entries;
 }
 
+function areEqual(a: EditCustomerDto, b: EditCustomerDto): boolean {
+  if (a.title !== b.title) return false;
+  if (a.first_name !== b.first_name) return false;
+  if (a.last_name !== b.last_name) return false;
+  if (a.address_street !== b.address_street) return false;
+  if (a.address_city !== b.address_city) return false;
+  if (a.phone !== b.phone) return false;
+  if (a.mobile_phone !== b.mobile_phone) return false;
+  if (a.birthdate !== b.birthdate) return false;
+  if (a.customer_since !== b.customer_since) return false;
+  if (a.note !== b.note) return false;
+  if (a.responsible_employee_id !== b.responsible_employee_id) return false;
+
+  return true;
+}
+
 export default function CustomerDetails(props: {
   selectedId: number | null;
   setSelectedId: (id: number | undefined) => void;
@@ -61,16 +77,19 @@ export default function CustomerDetails(props: {
   const [editData, setEditData] = createSignal<EditCustomerDto>({
     ...emptyEditData,
   });
-  const handleChange = <K extends keyof EditCustomerDto>(
-    key: K,
-    value: EditCustomerDto[K],
-  ) => {
-    setEditData((prev) => ({ ...prev, [key]: value }));
-  };
+  const [baseData, setBaseData] = createSignal<EditCustomerDto>({
+    ...emptyEditData,
+  });
+
+  const hasChanges = () => !areEqual(editData(), baseData());
 
   createEffect(async () => {
     if (props.selectedId === null || props.selectedId === undefined) {
-      setEditData({ ...emptyEditData });
+      const obj = { ...emptyEditData };
+
+      setEditData(obj);
+      setBaseData(obj);
+
       return;
     }
 
@@ -80,7 +99,7 @@ export default function CustomerDetails(props: {
 
     const data = customer();
     if (data) {
-      setEditData({
+      let obj = {
         id: data.id,
         title: data.title,
         first_name: data.first_name,
@@ -93,14 +112,31 @@ export default function CustomerDetails(props: {
         customer_since: data.customer_since,
         note: data.note,
         responsible_employee_id: data.responsible_employee?.id ?? null,
-      });
+      };
+
+      setEditData(obj);
+      setBaseData(obj);
     } else {
-      setEditData({ ...emptyEditData });
+      const obj = { ...emptyEditData };
+
+      setEditData(obj);
+      setBaseData(obj);
     }
   });
 
+  const handleChange = <K extends keyof EditCustomerDto>(
+    key: K,
+    value: EditCustomerDto[K],
+  ) => {
+    setEditData((prev) => ({ ...prev, [key]: value }));
+  };
+
   const storeData = async () => {
-    const id = await storeCustomer(editData());
+    const obj = editData();
+
+    const id = await storeCustomer(obj);
+    setBaseData(obj);
+
     props.onUpdate();
     props.setSelectedId(id);
   };
@@ -216,7 +252,7 @@ export default function CustomerDetails(props: {
         <Button onClick={() => props.setSelectedId(undefined)}>
           {t("general.cancel")}
         </Button>
-        <Button color="primary" onClick={storeData}>
+        <Button color="primary" onClick={storeData} disabled={!hasChanges()}>
           {t("general.save")}
         </Button>
       </div>

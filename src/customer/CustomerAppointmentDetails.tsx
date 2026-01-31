@@ -51,6 +51,20 @@ async function getEmployeeEntries(): Promise<SelectBoxPossibleValue[]> {
   return entries;
 }
 
+function areEqual(
+  a: EditCustomerAppointmentDto,
+  b: EditCustomerAppointmentDto,
+): boolean {
+  if (a.customer_id !== b.customer_id) return false;
+  if (a.start_date !== b.start_date) return false;
+  if (a.duration_minutes !== b.duration_minutes) return false;
+  if (a.treatment !== b.treatment) return false;
+  if (a.price !== b.price) return false;
+  if (a.employee_id !== b.employee_id) return false;
+
+  return true;
+}
+
 export default function CustomerAppointmentDetails(props: {
   customerId: number;
   selectedId: number | null;
@@ -68,6 +82,11 @@ export default function CustomerAppointmentDetails(props: {
   const [editData, setEditData] = createSignal<EditCustomerAppointmentDto>({
     ...emptyEditData,
   });
+  const [baseData, setBaseData] = createSignal<EditCustomerAppointmentDto>({
+    ...emptyEditData,
+  });
+
+  const hasChanges = () => !areEqual(editData(), baseData());
 
   createEffect(() => {
     if (props.selectedId === null && customer()) {
@@ -75,6 +94,50 @@ export default function CustomerAppointmentDetails(props: {
         ...data,
         employee_id: customer()?.responsible_employee?.id ?? null,
       }));
+    }
+  });
+
+  createEffect(async () => {
+    if (props.selectedId === null || props.selectedId === undefined) {
+      const obj = {
+        ...emptyEditData,
+        customer_id: props.customerId,
+        start_date: getCurrentDateTime(),
+      };
+
+      setEditData(obj);
+      setBaseData(obj);
+
+      return;
+    }
+
+    if (appointment.loading || appointment.error) {
+      return;
+    }
+
+    const data = appointment();
+    if (data) {
+      const obj = {
+        id: data.id,
+        customer_id: props.customerId,
+        start_date: data.start_date,
+        duration_minutes: data.duration_minutes,
+        treatment: data.treatment,
+        price: data.price,
+        employee_id: data.employee?.id ?? null,
+      };
+
+      setEditData(obj);
+      setBaseData(obj);
+    } else {
+      const obj = {
+        ...emptyEditData,
+        customer_id: props.customerId,
+        start_date: getCurrentDateTime(),
+      };
+
+      setEditData(obj);
+      setBaseData(obj);
     }
   });
 
@@ -102,40 +165,6 @@ export default function CustomerAppointmentDetails(props: {
       };
     });
   };
-
-  createEffect(async () => {
-    if (props.selectedId === null || props.selectedId === undefined) {
-      setEditData({
-        ...emptyEditData,
-        customer_id: props.customerId,
-        start_date: getCurrentDateTime(),
-      });
-      return;
-    }
-
-    if (appointment.loading || appointment.error) {
-      return;
-    }
-
-    const data = appointment();
-    if (data) {
-      setEditData({
-        id: data.id,
-        customer_id: props.customerId,
-        start_date: data.start_date,
-        duration_minutes: data.duration_minutes,
-        treatment: data.treatment,
-        price: data.price,
-        employee_id: data.employee?.id ?? null,
-      });
-    } else {
-      setEditData({
-        ...emptyEditData,
-        customer_id: props.customerId,
-        start_date: getCurrentDateTime(),
-      });
-    }
-  });
 
   const storeData = async () => {
     await storeCustomerAppointment(editData());
@@ -213,7 +242,7 @@ export default function CustomerAppointmentDetails(props: {
         <Button onClick={() => props.setSelectedId(undefined)}>
           {t("general.cancel")}
         </Button>
-        <Button color="primary" onClick={storeData}>
+        <Button color="primary" onClick={storeData} disabled={!hasChanges()}>
           {t("general.save")}
         </Button>
       </div>
