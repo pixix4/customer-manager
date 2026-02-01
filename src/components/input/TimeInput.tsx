@@ -46,6 +46,11 @@ export default function TimeInput(props: {
     setSelectedValue(createDateValue(props.value));
   });
 
+  const updateValue = () => {
+    const current = validateTime(selectedValue());
+    props.onChange(getTimeStringFromValues(current.hour, current.minute));
+  };
+
   createEffect(() => {
     const current = activeEditField();
     switch (current[0]) {
@@ -57,12 +62,7 @@ export default function TimeInput(props: {
         break;
       case "minute":
         if (current[1] >= 2) {
-          const current = validateTime(selectedValue());
-          const dateString = getTimeStringFromValues(
-            current.hour,
-            current.minute,
-          );
-          props.onChange(dateString);
+          updateValue();
           setActiveEditField(["minute", 0]);
         }
 
@@ -123,6 +123,7 @@ export default function TimeInput(props: {
     const current = activeEditField();
 
     setSelectedValue((v) => increment(v, current[0]));
+    updateValue();
 
     setActiveEditField((current) => {
       if (current[1] !== 0) {
@@ -137,6 +138,7 @@ export default function TimeInput(props: {
     const current = activeEditField();
 
     setSelectedValue((v) => decrement(v, current[0]));
+    updateValue();
 
     setActiveEditField((current) => {
       if (current[1] !== 0) {
@@ -313,7 +315,7 @@ function isValidMinute(minute: number): boolean {
  * - hour must be 0..23, minute must be 0..59
  * - if there is any problem with hour OR minute => all values set to 0
  */
-export function validateTime(value: TimeValue): TimeValue {
+function validateTime(value: TimeValue): TimeValue {
   const { hour, minute } = value;
 
   if (!isValidHour(hour) || !isValidMinute(minute)) {
@@ -331,7 +333,7 @@ export function validateTime(value: TimeValue): TimeValue {
  *
  * Note: If input is invalid, returns {0,0}
  */
-export function increment(value: TimeValue, field: EditField): TimeValue {
+function increment(value: TimeValue, field: EditField): TimeValue {
   const base = validateTime(value);
   // If invalid -> it becomes {0,0}. We keep that.
   if (
@@ -367,7 +369,7 @@ export function increment(value: TimeValue, field: EditField): TimeValue {
  *
  * Note: If input is invalid, returns {0,0}
  */
-export function decrement(value: TimeValue, field: EditField): TimeValue {
+function decrement(value: TimeValue, field: EditField): TimeValue {
   const base = validateTime(value);
   if (
     base.hour === 0 &&

@@ -52,18 +52,19 @@ export default function DateInput(props: {
     setSelectedValue(createDateValue(props.value));
   });
 
+  const updateValue = () => {
+    const current = validateDate(selectedValue());
+    props.onChange(
+      getDateStringFromValues(current.year, current.month, current.day),
+    );
+  };
+
   createEffect(() => {
     const current = activeEditField();
     switch (current[0]) {
       case "year":
         if (current[1] >= 4) {
-          const current = validateDate(selectedValue());
-          const dateString = getDateStringFromValues(
-            current.year,
-            current.month,
-            current.day,
-          );
-          props.onChange(dateString);
+          updateValue();
           setActiveEditField(["year", 0]);
         }
 
@@ -150,6 +151,7 @@ export default function DateInput(props: {
     const current = activeEditField();
 
     setSelectedValue((v) => increment(v, current[0]));
+    updateValue();
 
     setActiveEditField((current) => {
       if (current[1] !== 0) {
@@ -164,6 +166,7 @@ export default function DateInput(props: {
     const current = activeEditField();
 
     setSelectedValue((v) => decrement(v, current[0]));
+    updateValue();
 
     setActiveEditField((current) => {
       if (current[1] !== 0) {
@@ -386,7 +389,7 @@ function isValidDay(day: number): boolean {
  * - if year or month invalid => ALL values set to 0
  * - if day invalid => rounded/clamped to nearest valid day within month/year
  */
-export function validateDate(value: DateValue): DateValue {
+function validateDate(value: DateValue): DateValue {
   const { year, month, day } = value;
 
   // If year/month invalid, zero out everything (as requested)
@@ -419,7 +422,7 @@ export function validateDate(value: DateValue): DateValue {
  * - returns {0,0,0} if resulting year/month become invalid (same policy as validateDate)
  * - day is clamped to month/year after changing month/year
  */
-export function increment(value: DateValue, field: EditField): DateValue {
+function increment(value: DateValue, field: EditField): DateValue {
   // Work on a validated base. If invalid year/month => zero.
   const base = validateDate(value);
   if (base.year === 0 && base.month === 0 && base.day === 0) return base;
@@ -460,7 +463,7 @@ export function increment(value: DateValue, field: EditField): DateValue {
  * - returns {0,0,0} if resulting year/month become invalid (same policy as validateDate)
  * - day is clamped to month/year after changing month/year; for day underflow we jump to last day of prev month
  */
-export function decrement(value: DateValue, field: EditField): DateValue {
+function decrement(value: DateValue, field: EditField): DateValue {
   const base = validateDate(value);
   if (base.year === 0 && base.month === 0 && base.day === 0) return base;
 

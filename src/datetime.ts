@@ -28,7 +28,7 @@ function parseDateTimePartsSafe(
     date,
     hh: m[2],
     mm: m[3],
-    ss: m[4] ?? "00",
+    ss: "00",
   };
 }
 
