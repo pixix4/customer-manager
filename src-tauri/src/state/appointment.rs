@@ -1,4 +1,4 @@
-use chrono::{Duration, NaiveDateTime};
+use chrono::{Duration, NaiveDate, NaiveDateTime};
 use sqlx::{Pool, Sqlite};
 use std::sync::Arc;
 
@@ -47,17 +47,17 @@ impl AppointmentState {
         .map(|row| row.into())
         .collect();
 
-        let mut last_start_date: Option<NaiveDateTime> = None;
+        let mut last_start_date: Option<NaiveDate> = None;
         for appointment in &mut appointments {
             let duration = Duration::minutes(appointment.duration_minutes);
             appointment.end_date = appointment.start_date + duration;
 
             if let Some(last_start_date) = last_start_date {
-                let delta = appointment.start_date - last_start_date;
+                let delta = appointment.start_date.date() - last_start_date;
                 appointment.period_days = Some(delta.num_days())
             }
 
-            last_start_date = Some(appointment.start_date)
+            last_start_date = Some(appointment.start_date.date())
         }
 
         appointments.reverse();
