@@ -160,6 +160,9 @@ export default function NumberInput(props: {
           onKeyDown={handleKeyDown}
           onPaste={handleOnPaste}
           onChange={() => {}}
+          autocapitalize="off"
+          autocomplete="off"
+          autocorrect="off"
         />
         <div class={styles.numberActions}>
           <div

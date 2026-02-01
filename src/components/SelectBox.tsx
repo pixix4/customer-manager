@@ -154,12 +154,13 @@ export default function SelectBox(props: {
             type="search"
             placeholder={t("general.searchPlaceholder")}
             value={search()}
-            autocapitalize="off"
-            autocorrect="off"
             onInput={(e) => setSearch(e.currentTarget.value)}
             onKeyDown={keyDownHandler}
             onFocus={() => setHasFocus(true)}
             onBlur={() => setHasFocus(false)}
+            autocapitalize="off"
+            autocomplete="off"
+            autocorrect="off"
           />
         </div>
         <Show when={hasFocus()}>

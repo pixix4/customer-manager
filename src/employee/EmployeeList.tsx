@@ -59,6 +59,9 @@ export default function EmployeeList(props: {
           type="search"
           value={search()}
           onInput={(e) => setSearch(e.currentTarget.value)}
+          autocapitalize="off"
+          autocomplete="off"
+          autocorrect="off"
         />
       </div>
       <Switch>

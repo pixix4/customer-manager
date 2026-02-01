@@ -151,6 +151,9 @@ export default function TextInput(props: {
             onKeyDown={keyDownHandler}
             onFocus={() => setHasFocus(true)}
             onBlur={() => setHasFocus(false)}
+            autocapitalize="off"
+            autocomplete="off"
+            autocorrect="off"
           />
         }
       >
@@ -165,6 +168,9 @@ export default function TextInput(props: {
           onInput={(e) => props.onChange(e.currentTarget.value)}
           onFocus={() => setHasFocus(true)}
           onBlur={() => setHasFocus(false)}
+          autocapitalize="off"
+          autocomplete="off"
+          autocorrect="off"
         />
       </Show>
     </AbstractField>
