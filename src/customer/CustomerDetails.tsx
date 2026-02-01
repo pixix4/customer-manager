@@ -1,11 +1,11 @@
-import { createEffect, createResource, createSignal, Show } from "solid-js";
+import { createResource, createSignal, Show } from "solid-js";
 import TextInput from "../components/input/TextInput";
 import styles from "./CustomerDetails.module.css";
 import Button from "../components/Button";
 import {
-  createCustomerByIdResource,
   deleteCustomer,
   EditCustomerDto,
+  getCustomerById,
   getEmployeeList,
   storeCustomer,
 } from "../model";
@@ -16,6 +16,7 @@ import SplitView from "../components/SplitView";
 import CustomerAppointmentList from "./CustomerAppointmentList";
 import DateInput from "../components/input/DateInput";
 import MessageBox from "../components/MessageBox";
+import { createEditDraft } from "../hooks/form";
 
 const emptyEditData: EditCustomerDto = {
   id: null,
@@ -69,39 +70,25 @@ export default function CustomerDetails(props: {
   selectedId: number | null;
   setSelectedId: (id: number | undefined) => void;
   onUpdate: () => void;
+  onHasUnsavedChanges: (hasUnsavedChanges: boolean) => void;
 }) {
   const { t } = useTranslation();
 
   const [deleteMessageBox, setDeleteMessageBox] = createSignal(false);
-  const [customer] = createCustomerByIdResource(() => props.selectedId);
   const [employeeEntries] = createResource(getEmployeeEntries);
 
-  const [editData, setEditData] = createSignal<EditCustomerDto>({
-    ...emptyEditData,
-  });
-  const [baseData, setBaseData] = createSignal<EditCustomerDto>({
-    ...emptyEditData,
-  });
+  const draft = createEditDraft<EditCustomerDto>({
+    selectedId: () => props.selectedId,
+    setParentDirty: props.onHasUnsavedChanges,
+    empty: emptyEditData,
+    equals: areEqual,
+    load: async (id) => {
+      const data = await getCustomerById(id);
+      if (data === null) {
+        return null;
+      }
 
-  const hasChanges = () => !areEqual(editData(), baseData());
-
-  createEffect(async () => {
-    if (props.selectedId === null || props.selectedId === undefined) {
-      const obj = { ...emptyEditData };
-
-      setEditData(obj);
-      setBaseData(obj);
-
-      return;
-    }
-
-    if (customer.loading || customer.error) {
-      return;
-    }
-
-    const data = customer();
-    if (data) {
-      let obj = {
+      return {
         id: data.id,
         title: data.title,
         first_name: data.first_name,
@@ -115,32 +102,16 @@ export default function CustomerDetails(props: {
         note: data.note,
         responsible_employee_id: data.responsible_employee?.id ?? null,
       };
-
-      setEditData(obj);
-      setBaseData(obj);
-    } else {
-      const obj = { ...emptyEditData };
-
-      setEditData(obj);
-      setBaseData(obj);
-    }
+    },
   });
 
-  const handleChange = <K extends keyof EditCustomerDto>(
-    key: K,
-    value: EditCustomerDto[K],
-  ) => {
-    setEditData((prev) => ({ ...prev, [key]: value }));
-  };
-
   const storeData = async () => {
-    const obj = editData();
-
-    const id = await storeCustomer(obj);
-    setBaseData(obj);
+    const data = { ...draft.editData() };
+    data.id = await storeCustomer(data);
+    draft.commitSaved(data);
 
     props.onUpdate();
-    props.setSelectedId(id);
+    props.setSelectedId(data.id);
   };
 
   const deleteData = async () => {
@@ -149,6 +120,8 @@ export default function CustomerDetails(props: {
     }
 
     await deleteCustomer(props.selectedId);
+    draft.reset();
+
     props.onUpdate();
     props.setSelectedId(undefined);
   };
@@ -162,65 +135,65 @@ export default function CustomerDetails(props: {
             <InputGroup>
               <TextInput
                 label={t("customer.title")}
-                value={editData().title}
-                onChange={(v) => handleChange("title", v)}
+                value={draft.editData().title}
+                onChange={(v) => draft.handleChange("title", v)}
               />
             </InputGroup>
             <InputGroup>
               <TextInput
                 label={t("customer.firstName")}
-                value={editData().first_name}
-                onChange={(v) => handleChange("first_name", v)}
+                value={draft.editData().first_name}
+                onChange={(v) => draft.handleChange("first_name", v)}
               />
               <TextInput
                 label={t("customer.lastName")}
-                value={editData().last_name}
-                onChange={(v) => handleChange("last_name", v)}
+                value={draft.editData().last_name}
+                onChange={(v) => draft.handleChange("last_name", v)}
               />
             </InputGroup>
             <InputGroup>
               <TextInput
                 label={t("customer.addressCity")}
-                value={editData().address_city}
-                onChange={(v) => handleChange("address_city", v)}
+                value={draft.editData().address_city}
+                onChange={(v) => draft.handleChange("address_city", v)}
               />
               <TextInput
                 label={t("customer.addressStreet")}
-                value={editData().address_street}
-                onChange={(v) => handleChange("address_street", v)}
+                value={draft.editData().address_street}
+                onChange={(v) => draft.handleChange("address_street", v)}
               />
             </InputGroup>
             <InputGroup>
               <TextInput
                 label={t("customer.phone")}
-                value={editData().phone}
-                onChange={(v) => handleChange("phone", v)}
+                value={draft.editData().phone}
+                onChange={(v) => draft.handleChange("phone", v)}
               />
               <TextInput
                 label={t("customer.mobilePhone")}
-                value={editData().mobile_phone}
-                onChange={(v) => handleChange("mobile_phone", v)}
+                value={draft.editData().mobile_phone}
+                onChange={(v) => draft.handleChange("mobile_phone", v)}
               />
             </InputGroup>
             <InputGroup>
               <DateInput
                 label={t("customer.birthdate")}
-                value={editData().birthdate ?? ""}
-                onChange={(v) => handleChange("birthdate", v)}
+                value={draft.editData().birthdate ?? ""}
+                onChange={(v) => draft.handleChange("birthdate", v)}
               />
               <DateInput
                 label={t("customer.customerSince")}
-                value={editData().customer_since ?? ""}
-                onChange={(v) => handleChange("customer_since", v)}
+                value={draft.editData().customer_since ?? ""}
+                onChange={(v) => draft.handleChange("customer_since", v)}
               />
             </InputGroup>
             <InputGroup>
               <SelectBox
                 label={t("customer.responsibleEmployee")}
-                selected={editData().responsible_employee_id}
+                selected={draft.editData().responsible_employee_id}
                 possibleValues={employeeEntries() ?? []}
                 onSelect={(value) =>
-                  handleChange(
+                  draft.handleChange(
                     "responsible_employee_id",
                     value as number | null,
                   )
@@ -233,8 +206,8 @@ export default function CustomerDetails(props: {
           <div class={styles.customerNotes}>
             <TextInput
               label={t("customer.note")}
-              value={editData().note}
-              onChange={(v) => handleChange("note", v)}
+              value={draft.editData().note}
+              onChange={(v) => draft.handleChange("note", v)}
               rows={3}
             />
           </div>
@@ -254,7 +227,7 @@ export default function CustomerDetails(props: {
         <Button onClick={() => props.setSelectedId(undefined)}>
           {t("general.cancel")}
         </Button>
-        <Button color="primary" onClick={storeData} disabled={!hasChanges()}>
+        <Button color="primary" onClick={storeData} disabled={!draft.isDirty()}>
           {t("general.save")}
         </Button>
       </div>

@@ -7,6 +7,12 @@ export const dict = {
     save: "Save",
     delete: "Delete",
   },
+  masterDetails: {
+    dirtyConfirmTitle: "Unsaved changes",
+    dirtyConfirmMessage:
+      "You have unsaved changes. Do you want to discard them and continue?",
+    discard: "Discard changes",
+  },
   employee: {
     dialogTitle: "Employee management",
     create: "Create employee",

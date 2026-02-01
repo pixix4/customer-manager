@@ -13,6 +13,8 @@ import { createCustomerListResource } from "./model";
 import SplitView from "./components/SplitView";
 import CustomerDetails from "./customer/CustomerDetails";
 import { appConfig } from "./appConfig";
+import { createGuardedSelectedId } from "./hooks/masterDetails";
+import MessageBox from "./components/MessageBox";
 
 export default function App() {
   const { t } = useTranslation();
@@ -22,9 +24,8 @@ export default function App() {
     createSignal(false);
   const [showSettingsDialog, setShowSettingsDialog] = createSignal(false);
 
-  const [selectedId, setSelectedId] = createSignal<number | null | undefined>(
-    undefined,
-  );
+  const sel = createGuardedSelectedId(undefined);
+
   const [customers, { refetch }] = createCustomerListResource();
 
   const fontSize = () => appConfig("general.font-size");
@@ -43,7 +44,7 @@ export default function App() {
           <div class={styles.titleBarLeft}>
             <button
               class={styles.titleBarButton}
-              onClick={() => setSelectedId(null)}
+              onClick={() => sel.requestSelect(null)}
             >
               {t("customer.create")}
             </button>
@@ -82,26 +83,29 @@ export default function App() {
             left={
               <CustomerList
                 customers={customers}
-                selectedId={selectedId()}
-                setSelectedId={setSelectedId}
+                selectedId={sel.selectedId()}
+                setSelectedId={sel.requestSelect}
                 search={search()}
               />
             }
             right={
               <Switch>
-                <Match when={selectedId() === undefined}>
+                <Match when={sel.selectedId() === undefined}>
                   <WelcomeScreen />
                 </Match>
-                <Match when={selectedId() !== undefined}>
+                <Match when={sel.selectedId() !== undefined}>
                   <CustomerDetails
-                    selectedId={selectedId() ?? null}
-                    setSelectedId={setSelectedId}
+                    selectedId={sel.selectedId() ?? null}
+                    setSelectedId={sel.requestSelect}
                     onUpdate={refetch}
+                    onHasUnsavedChanges={sel.setHasUnsavedChanges}
                   />
                 </Match>
               </Switch>
             }
           />
+
+          <MessageBox {...sel.messageBoxProps()} />
         </main>
       </div>
 

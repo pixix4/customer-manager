@@ -8,6 +8,12 @@ export const dict: RawDictionary = {
     save: "Speichern",
     delete: "Löschen",
   },
+  masterDetails: {
+    dirtyConfirmTitle: "Ungespeicherte Änderungen",
+    dirtyConfirmMessage:
+      "Sie haben ungespeicherte Änderungen. Möchten sie diese verwerfen und fortfahren?",
+    discard: "Änderungen verwerfen",
+  },
   employee: {
     dialogTitle: "Mitarbeiterverwaltung",
     create: "Mitarbeiter erstellen",
@@ -83,7 +89,7 @@ export const dict: RawDictionary = {
     },
     months: {
       january: { long: "Januar" },
-      february: { long: "Febraur" },
+      february: { long: "Februar" },
       march: { long: "März" },
       april: { long: "April" },
       may: { long: "Mai" },

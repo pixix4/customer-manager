@@ -3,10 +3,10 @@ import TextInput from "../components/input/TextInput";
 import styles from "./CustomerAppointmentDetails.module.css";
 import Button from "../components/Button";
 import {
-  createCustomerAppointmentByIdResource,
   createCustomerByIdResource,
   deleteCustomerAppointment,
   EditCustomerAppointmentDto,
+  getCustomerAppointmentById,
   getEmployeeList,
   storeCustomerAppointment,
 } from "../model";
@@ -24,6 +24,7 @@ import NumberInput from "../components/input/NumberInput";
 import DateInput from "../components/input/DateInput";
 import TimeInput from "../components/input/TimeInput";
 import MessageBox from "../components/MessageBox";
+import { createEditDraft } from "../hooks/form";
 
 const emptyEditData: EditCustomerAppointmentDto = {
   id: null,
@@ -76,50 +77,23 @@ export default function CustomerAppointmentDetails(props: {
 
   const [deleteMessageBox, setDeleteMessageBox] = createSignal(false);
   const [customer] = createCustomerByIdResource(() => props.customerId);
-  const [appointment] = createCustomerAppointmentByIdResource(
-    () => props.selectedId,
-  );
   const [employeeEntries] = createResource(getEmployeeEntries);
 
-  const [editData, setEditData] = createSignal<EditCustomerAppointmentDto>({
-    ...emptyEditData,
-  });
-  const [baseData, setBaseData] = createSignal<EditCustomerAppointmentDto>({
-    ...emptyEditData,
-  });
+  const draft = createEditDraft<EditCustomerAppointmentDto>({
+    selectedId: () => props.selectedId,
+    empty: {
+      ...emptyEditData,
+      customer_id: props.customerId,
+      start_date: getCurrentDateTime(),
+    },
+    equals: areEqual,
+    load: async (id) => {
+      const data = await getCustomerAppointmentById(id);
+      if (data === null) {
+        return null;
+      }
 
-  const hasChanges = () => !areEqual(editData(), baseData());
-
-  createEffect(() => {
-    if (props.selectedId === null && customer()) {
-      setEditData((data) => ({
-        ...data,
-        employee_id: customer()?.responsible_employee?.id ?? null,
-      }));
-    }
-  });
-
-  createEffect(async () => {
-    if (props.selectedId === null || props.selectedId === undefined) {
-      const obj = {
-        ...emptyEditData,
-        customer_id: props.customerId,
-        start_date: getCurrentDateTime(),
-      };
-
-      setEditData(obj);
-      setBaseData(obj);
-
-      return;
-    }
-
-    if (appointment.loading || appointment.error) {
-      return;
-    }
-
-    const data = appointment();
-    if (data) {
-      const obj = {
+      return {
         id: data.id,
         customer_id: props.customerId,
         start_date: data.start_date,
@@ -128,48 +102,39 @@ export default function CustomerAppointmentDetails(props: {
         price: data.price,
         employee_id: data.employee?.id ?? null,
       };
+    },
+  });
 
-      setEditData(obj);
-      setBaseData(obj);
-    } else {
-      const obj = {
-        ...emptyEditData,
-        customer_id: props.customerId,
-        start_date: getCurrentDateTime(),
-      };
-
-      setEditData(obj);
-      setBaseData(obj);
+  createEffect(() => {
+    if (props.selectedId === null && customer()) {
+      draft.handleChange(
+        "employee_id",
+        customer()?.responsible_employee?.id ?? null,
+      );
     }
   });
 
-  const handleChange = <K extends keyof EditCustomerAppointmentDto>(
-    key: K,
-    value: EditCustomerAppointmentDto[K],
-  ) => {
-    setEditData((prev) => ({ ...prev, [key]: value }));
-  };
-
   const setStartDate = (value: string) => {
-    setEditData((prev) => {
+    draft.patch((prev) => {
       return {
-        ...prev,
         start_date: updateDateTimeWithDate(prev.start_date, value),
       };
     });
   };
 
   const setStartTime = (value: string) => {
-    setEditData((prev) => {
+    draft.patch((prev) => {
       return {
-        ...prev,
         start_date: updateDateTimeWithTime(prev.start_date, value),
       };
     });
   };
 
   const storeData = async () => {
-    await storeCustomerAppointment(editData());
+    const data = { ...draft.editData() };
+    data.id = await storeCustomerAppointment(data);
+    draft.commitSaved(data);
+
     props.onUpdate();
     props.setSelectedId(undefined);
   };
@@ -180,6 +145,8 @@ export default function CustomerAppointmentDetails(props: {
     }
 
     await deleteCustomerAppointment(props.selectedId);
+    draft.reset();
+
     props.onUpdate();
     props.setSelectedId(undefined);
   };
@@ -189,35 +156,35 @@ export default function CustomerAppointmentDetails(props: {
       <InputGroup>
         <DateInput
           label={t("customer.appointment.startDate")}
-          value={getDateFromDateTime(editData().start_date)}
+          value={getDateFromDateTime(draft.editData().start_date)}
           onChange={setStartDate}
         />
         <TimeInput
           label={t("customer.appointment.startTime")}
-          value={getTimeFromDateTime(editData().start_date)}
+          value={getTimeFromDateTime(draft.editData().start_date)}
           onChange={setStartTime}
         />
       </InputGroup>
       <InputGroup>
         <NumberInput
           label={t("customer.appointment.duration")}
-          value={editData().duration_minutes}
-          onChange={(v) => handleChange("duration_minutes", v)}
+          value={draft.editData().duration_minutes}
+          onChange={(v) => draft.handleChange("duration_minutes", v)}
           min={0}
           prefix={<span>min</span>}
         />
         <SelectBox
           label={t("customer.responsibleEmployee")}
-          selected={editData().employee_id}
+          selected={draft.editData().employee_id}
           possibleValues={employeeEntries() ?? []}
           onSelect={(value) =>
-            handleChange("employee_id", value as number | null)
+            draft.handleChange("employee_id", value as number | null)
           }
         />
         <NumberInput
           label={t("customer.appointment.price")}
-          value={editData().price}
-          onChange={(v) => handleChange("price", v)}
+          value={draft.editData().price}
+          onChange={(v) => draft.handleChange("price", v)}
           decimalPlaces={2}
           prefix={<span>€</span>}
         />
@@ -225,8 +192,8 @@ export default function CustomerAppointmentDetails(props: {
       <InputGroup>
         <TextInput
           label={t("customer.appointment.treatment")}
-          value={editData().treatment}
-          onChange={(v) => handleChange("treatment", v)}
+          value={draft.editData().treatment}
+          onChange={(v) => draft.handleChange("treatment", v)}
           rows={5}
         />
       </InputGroup>
@@ -244,7 +211,7 @@ export default function CustomerAppointmentDetails(props: {
         <Button onClick={() => props.setSelectedId(undefined)}>
           {t("general.cancel")}
         </Button>
-        <Button color="primary" onClick={storeData} disabled={!hasChanges()}>
+        <Button color="primary" onClick={storeData} disabled={!draft.isDirty}>
           {t("general.save")}
         </Button>
       </div>

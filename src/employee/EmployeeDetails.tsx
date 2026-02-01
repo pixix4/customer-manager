@@ -1,15 +1,16 @@
-import { createEffect, createSignal, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import TextInput from "../components/input/TextInput";
 import styles from "./EmployeeDetails.module.css";
 import Button from "../components/Button";
 import {
-  createEmployeeByIdResource,
   deleteEmployee,
   EditEmployeeDto,
+  getEmployeeById,
   storeEmployee,
 } from "../model";
 import { useTranslation } from "../translation";
 import MessageBox from "../components/MessageBox";
+import { createEditDraft } from "../hooks/form";
 
 const emptyEditData: EditEmployeeDto = {
   id: null,
@@ -26,62 +27,37 @@ export default function EmployeeDetails(props: {
   selectedId: number | null;
   setSelectedId: (id: number | undefined) => void;
   onUpdate: () => void;
+  onHasUnsavedChanges: (hasUnsavedChanges: boolean) => void;
 }) {
   const { t } = useTranslation();
 
   const [deleteMessageBox, setDeleteMessageBox] = createSignal(false);
-  const [employee] = createEmployeeByIdResource(() => props.selectedId);
 
-  const [editData, setEditData] = createSignal<EditEmployeeDto>({
-    ...emptyEditData,
-  });
-  const [baseData, setBaseData] = createSignal<EditEmployeeDto>({
-    ...emptyEditData,
-  });
+  const draft = createEditDraft<EditEmployeeDto>({
+    selectedId: () => props.selectedId,
+    setParentDirty: props.onHasUnsavedChanges,
+    empty: emptyEditData,
+    equals: areEqual,
+    load: async (id) => {
+      const data = await getEmployeeById(id);
+      if (data === null) {
+        return null;
+      }
 
-  const hasChanges = () => !areEqual(editData(), baseData());
-
-  createEffect(async () => {
-    if (props.selectedId === null || props.selectedId === undefined) {
-      const obj = { ...emptyEditData };
-
-      setEditData(obj);
-      setBaseData(obj);
-
-      return;
-    }
-
-    if (employee.loading || employee.error) {
-      return;
-    }
-
-    const data = employee();
-    if (data) {
-      const obj = {
+      return {
         id: data.id,
         name: data.name,
       };
-
-      setEditData(obj);
-      setBaseData(obj);
-    } else {
-      const obj = { ...emptyEditData };
-
-      setEditData(obj);
-      setBaseData(obj);
-    }
+    },
   });
-  const handleChange = <K extends keyof EditEmployeeDto>(
-    key: K,
-    value: EditEmployeeDto[K],
-  ) => {
-    setEditData((prev) => ({ ...prev, [key]: value }));
-  };
 
   const storeData = async () => {
-    const id = await storeEmployee(editData());
+    const data = { ...draft.editData() };
+    data.id = await storeEmployee(data);
+    draft.commitSaved(data);
+
     props.onUpdate();
-    props.setSelectedId(id);
+    props.setSelectedId(data.id);
   };
 
   const deleteData = async () => {
@@ -90,6 +66,8 @@ export default function EmployeeDetails(props: {
     }
 
     await deleteEmployee(props.selectedId);
+    draft.reset();
+
     props.onUpdate();
     props.setSelectedId(undefined);
   };
@@ -98,8 +76,8 @@ export default function EmployeeDetails(props: {
     <div class={styles.employeeDetails}>
       <TextInput
         label={t("employee.name")}
-        value={editData().name}
-        onChange={(v) => handleChange("name", v)}
+        value={draft.editData().name}
+        onChange={(v) => draft.handleChange("name", v)}
       />
 
       <div class={styles.actionRow}>
@@ -115,7 +93,7 @@ export default function EmployeeDetails(props: {
         <Button onClick={() => props.setSelectedId(undefined)}>
           {t("general.cancel")}
         </Button>
-        <Button color="primary" onClick={storeData} disabled={!hasChanges()}>
+        <Button color="primary" onClick={storeData} disabled={!draft.isDirty()}>
           {t("general.save")}
         </Button>
       </div>
